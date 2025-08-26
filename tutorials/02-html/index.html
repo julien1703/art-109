@@ -3,134 +3,170 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fun with HTML — ART-109</title>
+  <title>Commencal Supreme DH V5 — Bike Info</title>
   <style>
     body {
       font-family: system-ui, Arial, sans-serif;
       margin: 24px;
       line-height: 1.6;
     }
-    header, main, footer {
+
+    header,
+    main,
+    footer {
       max-width: 860px;
       margin: 0 auto;
     }
+
     section {
       padding-block: 16px;
-      border-top: 1px solid #ddd;
     }
-    img, iframe {
+
+    img {
       max-width: 100%;
       height: auto;
       border: 0;
+      display: block;
     }
+
     textarea {
       width: 100%;
       max-width: 560px;
     }
-    button {
-      padding: 8px 14px;
-      border: 1px solid #333;
-      border-radius: 8px;
-      background: #333;
-      color: #fff;
-      cursor: pointer;
+
+    input,
+    select {
+      margin-top: 6px;
     }
-    button:hover { background: #555; }
-    progress { width: 100%; max-width: 300px; }
-    .rainbow {
-      background: linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#5f27cd,#ff6b6b);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      background-size: 300% 100%;
-      animation: slide 3s linear infinite;
-    }
-    @keyframes slide {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
+
+    progress {
+      width: 100%;
+      max-width: 300px;
+      display: block;
+      margin-top: 8px;
     }
   </style>
 </head>
 <body>
   <header id="top">
-  <h1 id="title">Fun with HTML ✨</h1>
-  <button id="partyBtn" aria-label="Toggle rainbow effect on heading">
-    Toggle Party Mode 🌈
-  </button>
-</header>
+    <h1>Commencal Supreme DH V5 Öhlins Edition — Yellow</h1>
+  </header>
 
   <main>
     <section>
-      <h2>Write something</h2>
-      <textarea rows="4" placeholder="What are you doing right now?"></textarea>
+      <h2>Bike photo — Commencal Supreme DH V5</h2>
+      <img src="images/bike.jpg" alt="Commencal Supreme DH V5 Öhlins Edition Yellow downhill bike">
     </section>
 
     <section>
-      <h2>Image</h2>
-      <img src="images/image1.jpg" alt="Your chosen image">
-    </section>
-
-    <section>
-      <h2>Quick info</h2>
       <details>
-        <summary>Open me</summary>
-        <p>Hello, it’s Julien 👋 — welcome to my fun HTML page</p>
+        <summary>More details</summary>
+        <p><strong>Brand:</strong> Commencal</p>
+        <p><strong>Model:</strong> Supreme DH V5 Öhlins Edition</p>
+        <p><strong>Color:</strong> Yellow</p>
+        <p><strong>Discipline:</strong> Downhill racing / bike park</p>
+        <p><strong>Highlights:</strong> Öhlins DH suspension, race geometry, robust alloy frame</p>
       </details>
     </section>
 
     <section>
-      <h2>Autocomplete</h2>
-      <label for="animal">Type an animal:</label>
-      <input list="animals" id="animal" name="animal" placeholder="start typing…">
-      <datalist id="animals">
-        <option value="Dog"><option value="Cat"><option value="Panda">
-        <option value="Fox"><option value="Owl"><option value="Raccoon">
+      <h2>Ride notes</h2>
+      <textarea rows="4" placeholder="Track, conditions, setup tweaks…"></textarea>
+    </section>
+
+    <section>
+      <h2>Choose a bike type</h2>
+      <label for="bike">Type a style:</label>
+      <input list="bikes" id="bike" name="bike" placeholder="start typing…">
+      <datalist id="bikes">
+        <option value="Downhill">
+        <option value="Enduro">
+        <option value="Trail">
+        <option value="Cross-Country">
+        <option value="Gravel">
+        <option value="Road">
+        <option value="BMX">
       </datalist>
     </section>
 
     <section>
-      <h2>Progress & Range</h2>
-      <label for="rng">Web Dev skills:</label>
-      <input id="rng" type="range" min="0" max="100" value="40">
-      <progress id="prog" value="40" max="100"></progress>
+      <h2>Favorite Commencal model</h2>
+      <form>
+        <fieldset aria-describedby="modelHint">
+          <legend>Select your favorite</legend>
+          <p id="modelHint">Choose one option.</p>
+          <div>
+            <input type="radio" id="supreme-dh" name="model" value="Supreme DH V5">
+            <label for="supreme-dh">Supreme DH V5</label>
+          </div>
+          <div>
+            <input type="radio" id="meta-am" name="model" value="Meta AM">
+            <label for="meta-am">Meta AM</label>
+          </div>
+          <div>
+            <input type="radio" id="furious" name="model" value="Furious">
+            <label for="furious">Furious</label>
+          </div>
+          <div>
+            <input type="radio" id="clash" name="model" value="Clash">
+            <label for="clash">Clash</label>
+          </div>
+          <div>
+            <input type="radio" id="absolut" name="model" value="Absolut">
+            <label for="absolut">Absolut (Dirt Jump)</label>
+          </div>
+          <div>
+            <input type="radio" id="ramones" name="model" value="Ramones">
+            <label for="ramones">Ramones (Kids/Youth)</label>
+          </div>
+        </fieldset>
+      </form>
     </section>
 
     <section>
-      <h2>Pick a date</h2>
+      <h2>Plan next ride</h2>
+      <label for="date">Pick a date:</label>
       <input type="date" id="date">
     </section>
 
     <section>
-      <h2>File upload</h2>
-      <label for="myfile">Choose a file:</label>
-      <input type="file" id="myfile" name="myfile">
+      <h2>Ride stoke</h2>
+      <label for="rng">How was your ride?</label>
+      <input id="rng" type="range" min="0" max="100" value="40" aria-label="Stoke level">
+      <progress id="prog" value="40" max="100" aria-label="Stoke progress"></progress>
     </section>
 
     <section>
-  <h2>ASCII Dog</h2>
-  <pre>
-   /^ ^\  
-  / 0 0 \ 
-  V\ Y /V 
-   / - \  
-   |    \  
-   || (__V
-  </pre>
-</section>
+      <h2>Upload a photo of your ride or bike</h2>
+      <label for="myfile">Choose a file:</label>
+      <input type="file" id="myfile" name="myfile" aria-label="Upload ride photo or GPX">
+    </section>
 
+    <section>
+      <h2>ASCII bike</h2>
+      <pre>
+   __o
+ _ \<_
+(_)/(_)
+      </pre>
+    </section>
+
+    <section>
+      <h2>Video — Commencal NEW META SX V5</h2>
+      <iframe width="560" height="315" 
+        src="https://www.youtube.com/embed/Bnt2BevGq9w" 
+        title="Commencal NEW META SX V5 in action" 
+        allowfullscreen>
+      </iframe>
+    </section>
   </main>
 
   <footer>
-  <p>Julien Offray — ART-109 
-  <button onclick="location.href='#top'">Back to top</button>
-  </p>
-</footer>
+    <p>Julien Offray — ART-109</p>
+    <button onclick="location.href='#top'">Back to top ↑</button>
+  </footer>
 
   <script>
-    document.getElementById('partyBtn').addEventListener('click', () => {
-      document.getElementById('title').classList.toggle('rainbow');
-    });
-
     const rng  = document.getElementById('rng');
     const prog = document.getElementById('prog');
     rng.addEventListener('input', () => {
