@@ -52,12 +52,12 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1 id="title">Fun with HTML ✨</h1>
-    <button id="partyBtn" aria-label="Toggle rainbow effect on heading">
-      Toggle Party Mode 🌈
-    </button>
-  </header>
+  <header id="top">
+  <h1 id="title">Fun with HTML ✨</h1>
+  <button id="partyBtn" aria-label="Toggle rainbow effect on heading">
+    Toggle Party Mode 🌈
+  </button>
+</header>
 
   <main>
     <section>
@@ -107,17 +107,24 @@
     </section>
 
     <section>
-      <h2>Panda dancing</h2>
-      <iframe width="560" height="315"
-        src="https://www.youtube.com/embed/3raFUCaqJ_I"
-        title="Dancing Panda"
-        allowfullscreen></iframe>
-    </section>
+  <h2>ASCII Dog</h2>
+  <pre>
+   /^ ^\  
+  / 0 0 \ 
+  V\ Y /V 
+   / - \  
+   |    \  
+   || (__V
+  </pre>
+</section>
+
   </main>
 
   <footer>
-    <p>Julien Offray — ART-109</p>
-  </footer>
+  <p>Julien Offray — ART-109 
+  <button onclick="location.href='#top'">Back to top</button>
+  </p>
+</footer>
 
   <script>
     document.getElementById('partyBtn').addEventListener('click', () => {
