@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fun with HTML — ART-109</title>
+  <style>
+    body {
+      font-family: system-ui, Arial, sans-serif;
+      margin: 24px;
+      line-height: 1.6;
+    }
+    header, main, footer {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    section {
+      padding-block: 16px;
+      border-top: 1px solid #ddd;
+    }
+    img, iframe {
+      max-width: 100%;
+      height: auto;
+      border: 0;
+    }
+    textarea {
+      width: 100%;
+      max-width: 560px;
+    }
+    button {
+      padding: 8px 14px;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background: #333;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover { background: #555; }
+    progress { width: 100%; max-width: 300px; }
+    .rainbow {
+      background: linear-gradient(90deg,#ff6b6b,#feca57,#48dbfb,#5f27cd,#ff6b6b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-size: 300% 100%;
+      animation: slide 3s linear infinite;
+    }
+    @keyframes slide {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title">Fun with HTML ✨</h1>
+    <button id="partyBtn" aria-label="Toggle rainbow effect on heading">
+      Toggle Party Mode 🌈
+    </button>
+  </header>
+
+  <main>
+    <section>
+      <h2>Write something</h2>
+      <textarea rows="4" placeholder="What are you doing right now?"></textarea>
+    </section>
+
+    <section>
+      <h2>Image</h2>
+      <img src="images/image1.jpg" alt="Your chosen image">
+    </section>
+
+    <section>
+      <h2>Quick info</h2>
+      <details>
+        <summary>Open me</summary>
+        <p>Hello, it’s Julien 👋 — welcome to my fun HTML page</p>
+      </details>
+    </section>
+
+    <section>
+      <h2>Autocomplete</h2>
+      <label for="animal">Type an animal:</label>
+      <input list="animals" id="animal" name="animal" placeholder="start typing…">
+      <datalist id="animals">
+        <option value="Dog"><option value="Cat"><option value="Panda">
+        <option value="Fox"><option value="Owl"><option value="Raccoon">
+      </datalist>
+    </section>
+
+    <section>
+      <h2>Progress & Range</h2>
+      <label for="rng">Move the slider:</label>
+      <input id="rng" type="range" min="0" max="100" value="40">
+      <progress id="prog" value="40" max="100"></progress>
+    </section>
+
+    <section>
+      <h2>Pick a date</h2>
+      <input type="date" id="date">
+    </section>
+
+    <section>
+      <h2>File upload</h2>
+      <label for="myfile">Choose a file:</label>
+      <input type="file" id="myfile" name="myfile">
+    </section>
+
+    <section>
+      <h2>Panda dancing</h2>
+      <iframe width="560" height="315"
+        src="https://www.youtube.com/embed/3raFUCaqJ_I"
+        title="Dancing Panda"
+        allowfullscreen></iframe>
+    </section>
+  </main>
+
+  <footer>
+    <p>Julien Offray — ART-109</p>
+  </footer>
+
+  <script>
+    document.getElementById('partyBtn').addEventListener('click', () => {
+      document.getElementById('title').classList.toggle('rainbow');
+    });
+
+    const rng  = document.getElementById('rng');
+    const prog = document.getElementById('prog');
+    rng.addEventListener('input', () => {
+      prog.value = rng.value;
+    });
+  </script>
+</body>
+</html>
