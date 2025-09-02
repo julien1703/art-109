@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lake Tahoe</title>
+</head>
+<body>
+  <h1>Lake Tahoe</h1>
+
+  <img
+    src="images/lt640-fallback.jpeg"
+    srcset="
+      images/lt640.jpeg 640w,
+      images/lt1280.jpeg 1280w,
+      images/lt1920.jpeg 1920w"
+    sizes="(max-width: 640px) 90vw,
+           (max-width: 1280px) 80vw,
+           1200px"
+    alt="Lake Tahoe view"
+    loading="lazy"
+    decoding="async" />
+</body>
+</html>
