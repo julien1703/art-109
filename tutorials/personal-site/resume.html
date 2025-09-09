@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Julien Offray – Digital Product Design Student</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="home">
+    <div class="content-wrapper">
+      <header>
+        <h1 class="site-title">Julien Offray</h1>
+        <h2 class="site-subtitle">Digital Product Design Student</h2>
+        <p>
+          I am studying <strong>Digital Product Design and Development</strong> at <strong>HfG Schwäbisch Gmünd</strong> (6th semester) and currently spending my exchange semester at <strong>San José State University</strong> in California. My focus is on user-centered, technology-driven product concepts and clear, functional interfaces.
+        </p>
+      </header>
+      <main>
+        <section id="about">
+          <h3>About</h3>
+          <p>
+            I enjoy working at the intersection of design and technology: from research and flow definition to wireframes and interactive prototypes. Most recently, I completed an internship at <strong>Capgemini</strong> in Stuttgart as a UX Designer & Developer.
+          </p>
+        </section>
+
+        <section id="skills">
+          <h3>Skills</h3>
+          <ul>
+            <li><strong>Web Development:</strong> HTML, CSS, JavaScript</li>
+            <li><strong>Frameworks:</strong> Svelte, Next.js, React, Vue</li>
+            <li><strong>Backend & Tools:</strong> Node.js, MongoDB, Docker, Postman, Terminus</li>
+          </ul>
+        </section>
+
+        <section id="projects">
+          <h3>Selected Projects</h3>
+          <article>
+            <h4>Health cAIre</h4>
+            <div class="carousel">
+              <img src="images/Health-1.png" alt="Health cAIre placeholder image 1" class="active" />
+              <img src="images/Health-2.png" alt="Health cAIre placeholder image 2" />
+              <img src="images/Health-3.png" alt="Health cAIre placeholder image 3" />
+              <button class="prev">&#10094;</button>
+              <button class="next">&#10095;</button>
+            </div>
+            <p>
+              AI-powered health app concept: from ideation, wireframes and user flows to a consistent UI system. The goal is to make personal health data (via sensors) understandable and deliver motivating, easy-to-access insights.
+            </p>
+          </article>
+          <article>
+            <h4>BeeSmart</h4>
+            <div class="carousel">
+              <img src="images/Bee-1.png" alt="BeeSmart placeholder image 1" class="active" />
+              <img src="images/Bee-2.png" alt="BeeSmart placeholder image 2" />
+              <button class="prev">&#10094;</button>
+              <button class="next">&#10095;</button>
+            </div>
+            <p>
+              Digital co-pilot for beekeeping: documenting mite infestations, treatment tracking and AI-based evaluation. A logbook allows trend-based decisions for bee health – designed for beginners and advanced users alike.
+            </p>
+          </article>
+        </section>
+
+        <section id="resume">
+          <h3>Resume</h3>
+
+          <h4>Education</h4>
+          <ul>
+            <li><strong>Hochschule für Gestaltung (HfG):</strong> since March 2023 – Digital Product Design and Development (B.A.), Schwäbisch Gmünd</li>
+            <li><strong>Hochschule der Medien (HDM):</strong> Oct. 2021 – June 2022 – Packaging Technology (VT7), Stuttgart</li>
+            <li><strong>ProGenius Berufskolleg:</strong> Sept. 2019 – June 2021 – Assistant for Information & Communication, Fachhochschulreife, Schwäbisch Gmünd</li>
+          </ul>
+
+          <h4>Internship</h4>
+          <ul>
+            <li><strong>Capgemini:</strong> UX Design & Development – Stuttgart (March 2025 – July 2025)</li>
+          </ul>
+
+          <h4>Exchange</h4>
+          <ul>
+            <li><strong>San José State University (SJSU):</strong> California – Exchange Semester</li>
+          </ul>
+
+          <!-- <p>
+            Full resume: <a href="resume.pdf" target="_blank" rel="noopener">Download PDF</a>
+          </p> -->
+        </section>
+
+        <section id="contact">
+  <h3>Contact</h3>
+  <address>
+    <a href="mailto:julien.offray@gmail.com">julien.offray@gmail.com</a> ·
+    <a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener">LinkedIn</a> ·
+    <a href="https://github.com/julien1703" target="_blank" rel="noopener">GitHub</a>
+  </address>
+</section>
+      </main>
+    </div>
+
+    <footer>
+      <p>© <span id="year"></span> Julien Offray</p>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      document.querySelectorAll('.carousel').forEach(carousel => {
+        const images = carousel.querySelectorAll('img');
+        let current = 0;
+        const showImage = (index) => {
+          images.forEach((img, i) => img.classList.toggle('active', i === index));
+        };
+        carousel.querySelector('.prev').addEventListener('click', () => {
+          current = (current - 1 + images.length) % images.length;
+          showImage(current);
+        });
+        carousel.querySelector('.next').addEventListener('click', () => {
+          current = (current + 1) % images.length;
+          showImage(current);
+        });
+      });
+    </script>
+
+    <style>
+      
+      .carousel {
+        position: relative;
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .carousel img {
+        width: 100%;
+        display: none;
+      }
+      .carousel img.active {
+        display: block;
+      }
+      .carousel button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0,0,0,0.4);
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+      .carousel button.prev { left: 10px; }
+      .carousel button.next { right: 10px; }
+    </style>
+  </body>
+</html>
