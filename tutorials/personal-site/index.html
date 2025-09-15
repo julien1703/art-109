@@ -1,59 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Julien Offray – Digital Product Design & Development</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body class="home">
-  <header>
-    <h1 class="site-title">Julien Offray</h1>
-    <h2 class="site-subtitle">Digital Product Design & Development</h2>
-    <p>
-      I study <strong>Digital Product Design and Development</strong> at
-      <strong>HfG Schwäbisch Gmünd</strong>. I focus on user-centered,
-      technology-driven product concepts and clear, functional interfaces.
-      In <strong>March–July 2025</strong>, I worked as a <strong>UX Designer & Developer</strong>
-      at <strong>Capgemini</strong> in Stuttgart.
-    </p>
-  </header>
-
-  <main>
-    <section aria-label="About Me">
+    <header>
+      <h1 class="site-title">Julien Offray</h1>
+      <h2 class="site-subtitle">Digital Product Design & Development</h2>
       <p>
-        I enjoy working at the intersection of design and technology—from
-        research and flow definition to wireframes, interactive prototypes, and front-end builds.
+        I study <strong>Digital Product Design and Development</strong> at
+        <strong>HfG Schwäbisch Gmünd</strong>. I focus on user-centered,
+        technology-driven product concepts and clear, functional interfaces. In
+        <strong>March–July 2025</strong>, I worked as a
+        <strong>UX Designer & Developer</strong> at
+        <strong>Capgemini</strong> in Stuttgart.
       </p>
+    </header>
+
+    <main>
+      <section aria-label="About Me">
+        <p>
+          I enjoy working at the intersection of design and technology—from
+          research and flow definition to wireframes, interactive prototypes,
+          and front-end builds.
+        </p>
+        <p>
+          For a concise overview of my background, check out my
+          <a href="resume.html" class="text-link">resume</a>.
+        </p>
+      </section>
+    </main>
+
+    <footer>
       <p>
-        For a concise overview of my background, check out my
-        <a href="resume.html" class="text-link">resume</a>. 
+        © <span id="year"></span> by Julien Offray |
+        <a href="mailto:julien.offray@gmail.com" class="text-link"
+          >julien.offray@gmail.com</a
+        >
       </p>
-    </section>
-  </main>
+      <nav aria-label="Social Media">
+        <ul class="social-buttons">
+          <li>
+            <a
+              href="https://www.linkedin.com/in/julien-offray-b8b249283/"
+              target="_blank"
+              rel="noopener"
+              class="btn-social linkedin"
+            >
+              <img
+                src="images/icon-logo-linkedin.png"
+                alt="LinkedIn"
+                class="icon"
+              />
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/julien1703"
+              target="_blank"
+              rel="noopener"
+              class="btn-social github"
+            >
+              <img src="images/github.svg" alt="GitHub" class="icon" />
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </footer>
 
-  <footer>
-    <p>© <span id="year"></span> by Julien Offray |  
-      <a href="mailto:julien.offray@gmail.com" class="text-link">julien.offray@gmail.com</a>
-    </p>
-    <nav aria-label="Social Media">
-      <ul class="social-buttons">
-        <li>
-          <a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener" class="btn-social linkedin">
-            <img src="images/icon-logo-linkedin.png" alt="LinkedIn" class="icon"> 
-          </a>
-        </li>
-        <li>
-          <a href="https://github.com/julien1703" target="_blank" rel="noopener" class="btn-social github">
-            <img src="images/github.svg" alt="GitHub" class="icon"> 
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </footer>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
-</body>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
 </html>

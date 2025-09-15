@@ -1,0 +1,95 @@
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+
+body {
+  font-family: system-ui, Arial, sans-serif;
+  background: #141418;
+  color: #fff;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  margin: 30px;
+  color: #ff4d8d;
+  letter-spacing: .02em;
+}
+
+.layout {
+  display: grid;
+  gap: 28px;
+  justify-content: center;
+  align-content: start;
+  padding: 28px;
+}
+
+.spin {
+  width: 160px;
+  height: 160px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ff4d8d, #fb7a23);
+  animation: spin-rot 8s linear infinite;
+}
+@keyframes spin-rot {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.pulse {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ff3b3b, #c21fff);
+  animation: pulse-scale 2s ease-in-out infinite;
+}
+@keyframes pulse-scale {
+  0%, 100% { transform: scale(1); filter: saturate(1); }
+  50% { transform: scale(1.15); filter: saturate(1.2); }
+}
+
+.bounce {
+  width: 120px;
+  height: 120px;
+  border-radius: 16px;
+  background: #3a86ff;
+  animation: bounce-y 1.8s cubic-bezier(.3,.6,.3,1) infinite;
+}
+@keyframes bounce-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-90px); }
+}
+
+.progress {
+  width: 320px;
+  height: 14px;
+  background: rgba(255,255,255,.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.progress .bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #0b78ff, #19ffa7);
+  animation: fill 3s ease-in-out infinite alternate;
+}
+@keyframes fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+.glow-text {
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: #e6e6f0;
+  text-transform: uppercase;
+  animation: text-glow 2.2s ease-in-out infinite;
+}
+@keyframes text-glow {
+  0%, 100% { text-shadow: 0 0 0 rgba(24,224,255,0); transform: scale(1); }
+  50% { text-shadow: 0 0 18px rgba(24,224,255,.6); transform: scale(1.03); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin, .pulse, .bounce, .progress .bar, .glow-text { animation: none !important; }
+}
