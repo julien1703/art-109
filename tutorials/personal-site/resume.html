@@ -122,9 +122,7 @@
           <h3>Contact</h3>
           <address>
             <a href="mailto:julien.offray@gmail.com">julien.offray@gmail.com</a>
-            ·
             <a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener">LinkedIn</a>
-            ·
             <a href="https://github.com/julien1703" target="_blank" rel="noopener">GitHub</a>
           </address>
         </section>
@@ -138,6 +136,7 @@
     <script>
       document.getElementById("year").textContent = new Date().getFullYear();
 
+      // einfache Carousel-Logik
       document.querySelectorAll(".carousel").forEach((carousel) => {
         const images = carousel.querySelectorAll("img");
         let current = 0;

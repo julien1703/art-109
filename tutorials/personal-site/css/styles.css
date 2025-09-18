@@ -26,18 +26,10 @@
   --ease: cubic-bezier(.22, .61, .36, 1);
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html,
-body {
-  height: 100%;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+html, body { height: 100%; }
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -48,6 +40,11 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+
+  /* === Sticky Footer: body als Flex-Container === */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 img {
@@ -63,20 +60,17 @@ a {
   text-underline-offset: 3px;
   transition: color var(--fast) var(--ease);
 }
+a:hover { color: var(--accent-press); }
 
-a:hover {
-  color: var(--accent-press);
-}
-
-::selection {
-  background: var(--accent);
-  color: #fff;
-}
+::selection { background: var(--accent); color: #fff; }
 
 .content-wrapper {
   max-width: var(--container);
   margin-inline: auto;
   padding: 24px clamp(18px, 3.2vw, 36px) 80px;
+
+  /* === Sticky Footer: Inhalt füllt Resthöhe === */
+  flex: 1 0 auto;
 }
 
 header {
@@ -92,7 +86,6 @@ header {
   letter-spacing: .04em;
   margin: 0 0 6px 0;
 }
-
 .site-subtitle {
   font-family: var(--mono);
   font-weight: 700;
@@ -102,11 +95,7 @@ header {
   margin: -2px 0 14px 0;
   text-transform: uppercase;
 }
-
-header p {
-  color: var(--text-soft);
-  max-width: 75ch;
-}
+header p { color: var(--text-soft); max-width: 75ch; }
 
 main section {
   background: var(--surface);
@@ -117,10 +106,7 @@ main section {
   margin: 22px 0;
   transition: box-shadow var(--fast) var(--ease);
 }
-
-main section:hover {
-  box-shadow: var(--shadow-hover);
-}
+main section:hover { box-shadow: var(--shadow-hover); }
 
 h3 {
   font-family: var(--mono);
@@ -139,58 +125,41 @@ h4 {
   color: var(--text);
 }
 
-#resume h4 {
-  position: relative;
-  padding-top: 6px;
-}
-
+#resume h4 { position: relative; padding-top: 6px; }
 #resume h4::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 64px;
-  height: 3px;
+  top: 0; left: 0;
+  width: 64px; height: 3px;
   background: var(--accent);
   border-radius: 3px;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
+ul { margin: 0; padding: 0; list-style: none; }
 ul li {
   position: relative;
   padding: 10px 0 10px 26px;
   border-bottom: 1px dashed rgba(2, 6, 23, 0.08);
   color: var(--text);
 }
-
-ul li:last-child {
-  border-bottom: none;
-}
-
+ul li:last-child { border-bottom: none; }
 ul li::before {
   content: "";
   position: absolute;
-  left: 0;
-  top: 16px;
-  width: 8px;
-  height: 8px;
+  left: 0; top: 16px;
+  width: 8px; height: 8px;
   background: var(--accent);
   border-radius: 50%;
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
 }
 
+/* === Projects: Grid-Beispiel === */
 #projects .project {
   display: grid;
   grid-template-columns: 1fr;
   gap: 18px;
   align-items: start;
 }
-
 .project-media {
   aspect-ratio: var(--media-ratio);
   background: var(--surface-soft);
@@ -205,69 +174,48 @@ ul li::before {
 
 .carousel {
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; justify-content: center;
 }
-
 .carousel img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
+  max-width: 100%; max-height: 100%;
+  width: auto; height: auto;
   object-fit: contain;
   display: none;
 }
-
-.carousel img.active {
-  display: block;
-}
-
+.carousel img.active { display: block; }
 .carousel button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  position: absolute; top: 50%; transform: translateY(-50%);
   border: 1px solid var(--accent);
   background: rgba(239, 68, 68, 0.1);
   color: var(--accent);
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+  width: 42px; height: 42px; border-radius: 50%;
   cursor: pointer;
   transition: transform var(--fast) var(--ease), background var(--fast) var(--ease), color var(--fast) var(--ease), border var(--fast) var(--ease);
 }
-
 .carousel button:hover {
   transform: translateY(-50%) scale(1.06);
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
+  background: var(--accent); color: #fff; border-color: var(--accent);
 }
+.carousel .prev { left: 12px; }
+.carousel .next { right: 12px; }
 
-.carousel .prev {
-  left: 12px;
-}
-
-.carousel .next {
-  right: 12px;
-}
-
-.project-body p {
-  color: var(--text-soft);
-  margin: 0;
-}
+.project-body p { color: var(--text-soft); margin: 0; }
 
 @media (min-width: 960px) {
-  #projects .project {
-    grid-template-columns: 1.2fr 1fr;
-  }
+  #projects .project { grid-template-columns: 1.2fr 1fr; }
 }
 
+/* === Education: explizites + implizites Grid === */
 .edu-list {
   display: grid;
   gap: 12px;
+  /* EXPLIZITES Grid: so viele Spalten wie möglich, min 280px */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  /* IMPLIZITES Grid: automatisch entstehende Zeilen mit einheitlicher Mindesthöhe */
+  grid-auto-rows: minmax(120px, auto);
+  align-items: start;
 }
 
 .edu-item {
@@ -275,36 +223,23 @@ ul li::before {
   padding-left: 0;
   border-bottom: 1px dashed rgba(2, 6, 23, 0.08);
 }
-
-.edu-item:last-child {
-  border-bottom: none;
-}
-
-.edu-item::before {
-  content: none;
-}
+.edu-item:last-child { border-bottom: none; }
+.edu-item::before { content: none; }
 
 .edu-logo {
   float: left;
-  width: 56px;
-  height: 56px;
-  margin-right: 12px;
-  margin-bottom: 6px;
+  width: 56px; height: 56px;
+  margin-right: 12px; margin-bottom: 6px;
   object-fit: contain;
   border-radius: 8px;
   background: #fff;
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
 }
+.edu-text { color: var(--text); }
+.edu-text strong { font-weight: 800; }
 
-.edu-text {
-  color: var(--text);
-}
-
-.edu-text strong {
-  font-weight: 800;
-}
-
+/* === Social Buttons: Flex === */
 .social-buttons {
   display: flex;
   gap: 14px;
@@ -312,32 +247,45 @@ ul li::before {
   margin-top: 18px;
   flex-wrap: wrap;
 }
-
 .btn-social {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
+  align-items: center; justify-content: center;
+  width: 48px; height: 48px;
   border-radius: 12px;
   background: var(--surface);
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease), border-color var(--fast) var(--ease), background var(--fast) var(--ease);
+  /* Beispiel für Flex-Größenverhalten */
+  flex: 0 0 48px; /* grow 0, shrink 0, basis 48px */
 }
-
 .btn-social:hover {
   transform: translateY(-2px);
   border-color: var(--accent);
   background: rgba(239, 68, 68, 0.1);
   box-shadow: var(--shadow-hover);
 }
-
 .btn-social .icon {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
-  display: block;
+  width: 22px; height: 22px; object-fit: contain; display: block;
+}
+
+/* === Contact: Flex-Ausrichtung & Wrap === */
+#contact address {
+  display: flex;
+  gap: 12px 16px;
+  flex-wrap: wrap;
+  align-items: center;       /* vertikal ausrichten */
+  justify-content: center;   /* horizontal zentrieren */
+}
+#contact address a {
+  text-decoration: none;
+  border: 1px solid var(--line);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+#contact address a:hover {
+  border-color: var(--accent);
+  background: rgba(239, 68, 68, 0.08);
 }
 
 footer {
@@ -346,28 +294,24 @@ footer {
   color: var(--muted);
   text-align: center;
   padding-top: 18px;
+
+  /* === Sticky Footer: Footer schrumpft nicht === */
+  flex-shrink: 0;
 }
 
 .fixed-cta {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
+  right: 16px; bottom: 16px;
   z-index: 1000;
-  background: var(--accent);
-  color: #fff;
+  background: var(--accent); color: #fff;
   border: 1px solid transparent;
   padding: 10px 14px;
   border-radius: 999px;
   box-shadow: var(--shadow);
-  font-weight: 700;
-  letter-spacing: .02em;
+  font-weight: 700; letter-spacing: .02em;
   transition: transform var(--fast) var(--ease), background var(--fast) var(--ease);
 }
-
-.fixed-cta:hover {
-  transform: translateY(-2px);
-  background: var(--accent-press);
-}
+.fixed-cta:hover { transform: translateY(-2px); background: var(--accent-press); }
 
 :focus-visible {
   outline: 2px solid var(--accent);
