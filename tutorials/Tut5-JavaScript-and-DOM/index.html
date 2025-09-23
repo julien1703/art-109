@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tut 5: JavaScript and the DOM
+</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <h1>Tut 5: JavaScript and the DOM</h1>
+      <p id="js-status">JS Status: <span class="badge">loading…</span></p>
+    </header>
+    <main class="container">
+      <div class="card">
+        <div class="row">
+          <div
+            id="timer-box"
+            class="box"
+            aria-label="Box that changes style after 2 seconds"
+          ></div>
+          <p class="hint">
+            This box will change its style after ~2 seconds using
+            <code>setTimeout</code>.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <button id="click-btn" class="btn">Click me</button>
+          <p id="click-target" class="click-target">
+            I will change when you click
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <img
+            id="photo"
+            class="image"
+            src="img/stuttgart.jpg"
+            alt="Photo of Stuttgart"
+            title="Click me to hide/show"
+            tabindex="0"
+            role="button"
+          />
+          <button id="toggle-image-btn" class="btn">Show / Hide Image</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <div class="controls">
+            <button id="reveal-all-btn" class="btn">Reveal / Hide All</button>
+            <button id="reset-grid-btn" class="btn btn-secondary">
+              Reset Grid
+            </button>
+          </div>
+
+          <div id="grid" class="grid" aria-label="3x3 grid of images">
+            <img class="cell" alt="France" src="img/fr.png" />
+            <img class="cell" alt="Rome" src="img/rom.jpeg" />
+            <img class="cell" alt="Italy" src="img/it.png" />
+
+            <img class="cell" alt="Stuttgart" src="img/stuttgart.jpg" />
+            <img class="cell" alt="USA" src="img/usa.jpg" />
+            <img class="cell" alt="Paris" src="img/paris.jpeg" />
+            <img class="cell" alt="Yosemite" src="img/yo.jpg" />
+            <img class="cell" alt="Germany" src="img/Flag_of_Germany.svg.png" />
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

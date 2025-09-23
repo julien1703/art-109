@@ -1,0 +1,43 @@
+:root{
+  --bg:#0f172a;
+  --card:#111827;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --accent:#60a5fa;
+  --accent-2:#f472b6;
+  --line:#1f2937;
+  --ok:#10b981;
+  --warn:#f59e0b;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+
+.site-header,.site-footer{padding:1rem 1.25rem;background:linear-gradient(90deg,var(--card),#0b1220)}
+.site-header h1{margin:.25rem 0}
+#js-status .badge{display:inline-block;padding:.2rem .5rem;border-radius:999px;background:var(--warn);color:#111}
+
+.container{max-width:1000px;margin:1rem auto;padding:0 1rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:1rem 1.25rem;margin:1rem 0;box-shadow:0 2px 16px rgba(0,0,0,.15)}
+.card h2{margin:0 0 .5rem}
+
+.row{display:flex;flex-direction:column;gap:.75rem;margin:1rem 0}
+.hint{color:var(--muted);font-size:.9rem}
+
+.box{width:140px;height:140px;border-radius:12px;background:#1f2937;border:1px dashed #374151;transition:all .25s ease}
+.box.highlight{outline:6px solid #22d3ee;background:#065f46;box-shadow:0 0 0 6px rgba(34,211,238,.25)}
+
+.btn{cursor:pointer;background:var(--accent);color:#0b1220;border:none;border-radius:999px;padding:.6rem 1rem;font-weight:600}
+.btn:hover{filter:brightness(1.05)}
+.btn:active{transform:translateY(1px)}
+.btn-secondary{background:var(--accent-2);}
+
+.click-target{padding:.6rem 1rem;border-radius:8px;border:1px solid var(--line);transition:all .2s ease}
+.click-target.is-active{background:#102033;color:#dbeafe;border-color:#204070}
+
+.image{max-width:100%;border-radius:12px;border:1px solid var(--line);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.hidden{display:none !important}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:520px}
+.cell{width:100%;aspect-ratio:1/1;border-radius:10px;border:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.2);object-fit:cover}
+.cell.hidden{display:none}
