@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap');
 
 :root {
   --bg: #ffffff;
@@ -10,24 +9,34 @@
   --line: #e5e7eb;
   --accent: #ef4444;
   --accent-press: #b91c1c;
+
   --container: 1120px;
+
   --radius: 14px;
   --radius-sm: 10px;
   --shadow: 0 10px 24px rgba(2, 6, 23, 0.06);
   --shadow-hover: 0 14px 32px rgba(2, 6, 23, 0.1);
+
   --h1: clamp(2.4rem, 4vw, 3.2rem);
   --h2: clamp(1.4rem, 2.3vw, 1.85rem);
   --h3: clamp(1.06rem, 1.6vw, 1.18rem);
-  --body: clamp(1rem, 1.1vw, 1.06rem);
+  --body: clamp(0.98rem, 0.35vw + 0.9rem, 1.08rem); 
+
   --media-ratio: 16 / 9;
+
   --mono: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
   --sans: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+
   --fast: 140ms;
   --ease: cubic-bezier(.22, .61, .36, 1);
+
+  
+  --bp-smƒ: 560px;
+  --bp-md: 768px;
+  --bp-lg: 960px;
 }
 
 * { box-sizing: border-box; }
-
 html, body { height: 100%; }
 html { scroll-behavior: smooth; }
 
@@ -41,7 +50,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 
-  /* === Sticky Footer: body als Flex-Container === */
+  
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -49,6 +58,7 @@ body {
 
 img {
   max-width: 100%;
+  height: auto; 
   display: block;
   border-radius: var(--radius-sm);
 }
@@ -67,16 +77,14 @@ a:hover { color: var(--accent-press); }
 .content-wrapper {
   max-width: var(--container);
   margin-inline: auto;
-  padding: 24px clamp(18px, 3.2vw, 36px) 80px;
-
-  /* === Sticky Footer: Inhalt füllt Resthöhe === */
+  padding: 1.2rem clamp(1rem, 3.2vw, 2rem) 5rem;
   flex: 1 0 auto;
 }
 
 header {
-  padding: 36px 0 18px;
+  padding: 2rem 0 1rem;
   border-bottom: 1px solid var(--line);
-  margin-bottom: 28px;
+  margin-bottom: 1.4rem;
 }
 
 .site-title {
@@ -84,7 +92,7 @@ header {
   font-weight: 800;
   font-size: var(--h1);
   letter-spacing: .04em;
-  margin: 0 0 6px 0;
+  margin: 0 0 .35rem 0;
 }
 .site-subtitle {
   font-family: var(--mono);
@@ -92,7 +100,7 @@ header {
   color: var(--text);
   font-size: var(--h2);
   letter-spacing: .08em;
-  margin: -2px 0 14px 0;
+  margin: -2px 0 .9rem 0;
   text-transform: uppercase;
 }
 header p { color: var(--text-soft); max-width: 75ch; }
@@ -101,9 +109,9 @@ main section {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: clamp(18px, 2.4vw, 28px);
+  padding: clamp(1rem, 2.4vw, 1.6rem);
   box-shadow: var(--shadow);
-  margin: 22px 0;
+  margin: 1.2rem 0;
   transition: box-shadow var(--fast) var(--ease);
 }
 main section:hover { box-shadow: var(--shadow-hover); }
@@ -113,19 +121,19 @@ h3 {
   font-size: var(--h3);
   letter-spacing: .18em;
   text-transform: uppercase;
-  margin: 0 0 16px 0;
+  margin: 0 0 1rem 0;
   color: var(--text);
 }
 
 h4 {
   font-family: var(--mono);
-  margin: 6px 0 10px 0;
+  margin: .4rem 0 .6rem 0;
   font-weight: 800;
   letter-spacing: .02em;
   color: var(--text);
 }
 
-#resume h4 { position: relative; padding-top: 6px; }
+#resume h4 { position: relative; padding-top: .35rem; }
 #resume h4::before {
   content: "";
   position: absolute;
@@ -135,10 +143,21 @@ h4 {
   border-radius: 3px;
 }
 
+.text-left   { text-align: left; }
+.text-center { text-align: center; }
+.text-right  { text-align: right; }
+.uppercase   { text-transform: uppercase; }
+.capitalize  { text-transform: capitalize; }
+.leading-tight   { line-height: 1.35; }
+.leading-normal  { line-height: 1.6; }
+.leading-relaxed { line-height: 1.8; }
+.tracking-tight  { letter-spacing: -0.01em; }
+.tracking-wide   { letter-spacing: 0.06em; }
+
 ul { margin: 0; padding: 0; list-style: none; }
 ul li {
   position: relative;
-  padding: 10px 0 10px 26px;
+  padding: .6rem 0 .6rem 1.3rem;
   border-bottom: 1px dashed rgba(2, 6, 23, 0.08);
   color: var(--text);
 }
@@ -146,18 +165,17 @@ ul li:last-child { border-bottom: none; }
 ul li::before {
   content: "";
   position: absolute;
-  left: 0; top: 16px;
+  left: 0; top: .9rem;
   width: 8px; height: 8px;
   background: var(--accent);
   border-radius: 50%;
   box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
 }
 
-/* === Projects: Grid-Beispiel === */
 #projects .project {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 1rem;
   align-items: start;
 }
 .project-media {
@@ -203,18 +221,15 @@ ul li::before {
 
 .project-body p { color: var(--text-soft); margin: 0; }
 
-@media (min-width: 960px) {
+@media (min-width: var(--bp-md)) {
   #projects .project { grid-template-columns: 1.2fr 1fr; }
 }
 
-/* === Education: explizites + implizites Grid === */
 .edu-list {
   display: grid;
-  gap: 12px;
-  /* EXPLIZITES Grid: so viele Spalten wie möglich, min 280px */
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  /* IMPLIZITES Grid: automatisch entstehende Zeilen mit einheitlicher Mindesthöhe */
-  grid-auto-rows: minmax(120px, auto);
+  gap: .75rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* explicit grid */
+  grid-auto-rows: minmax(120px, auto);                         /* implicit rows */
   align-items: start;
 }
 
@@ -229,7 +244,7 @@ ul li::before {
 .edu-logo {
   float: left;
   width: 56px; height: 56px;
-  margin-right: 12px; margin-bottom: 6px;
+  margin-right: .75rem; margin-bottom: .35rem;
   object-fit: contain;
   border-radius: 8px;
   background: #fff;
@@ -239,12 +254,18 @@ ul li::before {
 .edu-text { color: var(--text); }
 .edu-text strong { font-weight: 800; }
 
-/* === Social Buttons: Flex === */
+@media (min-width: var(--bp-sm)) {
+  .edu-list { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+}
+@media (min-width: var(--bp-lg)) {
+  .edu-list { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+}
+
 .social-buttons {
   display: flex;
-  gap: 14px;
+  gap: .9rem;
   justify-content: center;
-  margin-top: 18px;
+  margin-top: 1rem;
   flex-wrap: wrap;
 }
 .btn-social {
@@ -256,8 +277,7 @@ ul li::before {
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
   transition: transform var(--fast) var(--ease), box-shadow var(--fast) var(--ease), border-color var(--fast) var(--ease), background var(--fast) var(--ease);
-  /* Beispiel für Flex-Größenverhalten */
-  flex: 0 0 48px; /* grow 0, shrink 0, basis 48px */
+  flex: 0 0 48px;
 }
 .btn-social:hover {
   transform: translateY(-2px);
@@ -269,18 +289,17 @@ ul li::before {
   width: 22px; height: 22px; object-fit: contain; display: block;
 }
 
-/* === Contact: Flex-Ausrichtung & Wrap === */
 #contact address {
   display: flex;
-  gap: 12px 16px;
+  gap: .75rem 1rem;
   flex-wrap: wrap;
-  align-items: center;       /* vertikal ausrichten */
-  justify-content: center;   /* horizontal zentrieren */
+  align-items: center;
+  justify-content: center;
 }
 #contact address a {
   text-decoration: none;
   border: 1px solid var(--line);
-  padding: 6px 10px;
+  padding: .4rem .65rem;
   border-radius: 999px;
 }
 #contact address a:hover {
@@ -290,22 +309,20 @@ ul li::before {
 
 footer {
   border-top: 1px solid var(--line);
-  margin-top: 36px;
+  margin-top: 2rem;
   color: var(--muted);
   text-align: center;
-  padding-top: 18px;
-
-  /* === Sticky Footer: Footer schrumpft nicht === */
+  padding-top: 1rem;
   flex-shrink: 0;
 }
 
 .fixed-cta {
   position: fixed;
-  right: 16px; bottom: 16px;
+  right: 1rem; bottom: 1rem;
   z-index: 1000;
   background: var(--accent); color: #fff;
   border: 1px solid transparent;
-  padding: 10px 14px;
+  padding: .6rem .9rem;
   border-radius: 999px;
   box-shadow: var(--shadow);
   font-weight: 700; letter-spacing: .02em;
@@ -318,3 +335,16 @@ footer {
   outline-offset: 3px;
   border-radius: 6px;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+@media (max-width: 360px) {
+  .content-wrapper { padding: .9rem 1rem 3.5rem; }
+  main section { padding: .9rem; }
+}
+
+@media (min-width: var(--bp-sm)) { .sm-hidden { display: none !important; } }
+@media (min-width: var(--bp-md)) { .md-stack  { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; } }
+@media (min-width: var(--bp-lg)) { .lg-wide   { max-width: 1280px; } }
