@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You Are Being Watched</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="scanline"></div>
+    
+    <header>
+        <h1>◉ SURVEILLANCE ACTIVE ◉</h1>
+        <p class="subtitle">Your every move is being recorded and analyzed</p>
+    </header>
+
+    <main>
+        <div class="warning">
+            ⚠ WARNING: This session is being monitored ⚠
+        </div>
+
+        <section class="stats-panel">
+            <div class="stat-box">
+                <div class="stat-label">MOUSE MOVEMENTS</div>
+                <div class="stat-value" id="mouseCount">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">CLICKS RECORDED</div>
+                <div class="stat-value" id="clickCount">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">TIME WATCHED</div>
+                <div class="stat-value" id="timeCount">0s</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">BEHAVIOR SCORE</div>
+                <div class="stat-value" id="behaviorScore">--</div>
+            </div>
+        </section>
+
+        <section class="profile-section">
+            <h2>YOUR PROFILE</h2>
+            <p>Based on your browsing behavior, we have determined:</p>
+            <div class="profile-traits" id="profileTraits"></div>
+            <div id="observations"></div>
+        </section>
+
+        <section class="profile-section">
+            <h2>WHAT WE KNOW</h2>
+            <p>Every interaction reveals something about you. Each click, each pause, each movement tells us more than you realize.</p>
+            <p style="margin-top: 1rem;">Your digital footprint is being compiled. This profile will follow you.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+                Screen Resolution: <span id="screenRes"></span> | 
+                Browser: <span id="browserInfo"></span> | 
+                Platform: <span id="platformInfo"></span>
+            </p>
+        </section>
+    </main>
+
+    <div class="data-stream" id="dataStream">
+        <strong>◉ LIVE DATA STREAM ◉</strong>
+        <div id="streamContent"></div>
+    </div>
+
+    <footer>
+        <p>Project 2 - Net Art</p>
+        <p style="margin-top: 0.5rem;">Julius Offray</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
