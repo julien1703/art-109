@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Julien Offray – Digital Product Design Student</title>
 
-    <!-- Faster Google Fonts loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="description" content="Resume & selected projects by Julien Offray — Digital Product Design Student" />
+    <link rel="canonical" href="https://yourdomain.example/resume.html" />
+
+    <!-- Open Graph minimal -->
+    <meta property="og:title" content="Julien Offray — Resume" />
+    <meta property="og:description" content="Resume & selected projects" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/styles.css" />
@@ -16,10 +23,34 @@
     <a href="#top" class="fixed-cta" aria-label="Back to top">↑ Top</a>
 
     <div class="content-wrapper">
-      <header id="top">
-        <h1 class="site-title">Julien Offray</h1>
-        <h2 class="site-subtitle">Digital Product Design Student</h2>
-        <p>
+      <!-- Header (same as index) -->
+      <header id="top" class="site-header" role="banner">
+        <div class="header-inner">
+          <div class="brand">
+            <h1 class="site-title">Julien Offray</h1>
+            <h2 class="site-subtitle">Digital Product Design Student</h2>
+          </div>
+
+          <button id="nav-toggle"
+                  class="nav-toggle"
+                  aria-controls="primary-nav"
+                  aria-expanded="false"
+                  aria-label="Open navigation">
+            <span class="hamburger" aria-hidden="true"></span>
+          </button>
+
+          <nav id="primary-nav" class="primary-nav" role="navigation" aria-label="Primary">
+            <ul>
+              <li><a href="index.html">Home</a></li>
+              <li><a href="resume.html">Resume</a></li>
+              <li><a href="#projects">Projects</a></li>
+              <li><a href="#contact">Contact</a></li>
+              <li><a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener noreferrer" class="nav-link-cta">LinkedIn</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <p class="lead">
           I am studying <strong>Digital Product Design and Development</strong>
           at <strong>HfG Schwäbisch Gmünd</strong> (6th semester) and currently
           spending my exchange semester at
@@ -155,8 +186,10 @@
     </footer>
 
     <script>
+      /* Year */
       document.getElementById("year").textContent = new Date().getFullYear();
 
+      /* Carousel logic (from original file) */
       document.querySelectorAll(".carousel").forEach((carousel) => {
         const images = carousel.querySelectorAll("img");
         let current = 0;
@@ -178,6 +211,55 @@
           });
         }
       });
+
+      /* Navigation toggle script (same as index) */
+      (function () {
+        const toggle = document.getElementById('nav-toggle');
+        const nav = document.getElementById('primary-nav');
+        const focusableLinks = nav.querySelectorAll('a');
+
+        function setExpanded(value) {
+          toggle.setAttribute('aria-expanded', String(value));
+          nav.classList.toggle('open', value);
+          document.documentElement.classList.toggle('nav-open', value);
+        }
+
+        toggle.addEventListener('click', () => {
+          const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+          setExpanded(!isOpen);
+          if (!isOpen) {
+            focusableLinks[0].focus();
+            document.body.style.overflow = 'hidden';
+          } else {
+            toggle.focus();
+            document.body.style.overflow = '';
+          }
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+            setExpanded(false);
+            toggle.focus();
+            document.body.style.overflow = '';
+          }
+        });
+
+        focusableLinks.forEach((a) => {
+          a.addEventListener('click', () => {
+            if (window.getComputedStyle(toggle).display !== 'none') setExpanded(false);
+            document.body.style.overflow = '';
+          });
+        });
+
+        document.addEventListener('click', (e) => {
+          const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+          if (!isOpen) return;
+          if (!nav.contains(e.target) && !toggle.contains(e.target)) {
+            setExpanded(false);
+            document.body.style.overflow = '';
+          }
+        });
+      })();
     </script>
   </body>
 </html>
