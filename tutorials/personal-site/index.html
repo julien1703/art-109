@@ -3,41 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Julien Offray – Digital Product Design & Development</title>
+    <title>Julien Offray – Digital Product Design Student</title>
 
-    <!-- Basic SEO / Social -->
-    <meta name="description" content="Julien Offray — Digital Product Design & Development. Selected projects, resume and contact. Available for internships and collaborations." />
-    <link rel="canonical" href="https://yourdomain.example/" />
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Julien Offray — Digital Product Design & Development" />
-    <meta property="og:description" content="Selected projects, resume and contact. Available for internships and collaborations." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://yourdomain.example/" />
-    <meta property="og:image" content="https://yourdomain.example/images/og-image.jpg" />
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Julien Offray — Digital Product Design & Development" />
-    <meta name="twitter:description" content="Selected projects, resume and contact." />
-    <meta name="twitter:image" content="https://yourdomain.example/images/og-image.jpg" />
-
-    <!-- Fonts -->
+    <meta name="description" content="Resume & selected projects by Julien Offray — Digital Product Design Student" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
 
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body class="home">
+    <a href="#top" class="fixed-cta" aria-label="Back to top">↑ Top</a>
+
     <div class="content-wrapper">
       <header id="top" class="site-header" role="banner">
         <div class="header-inner">
           <div class="brand">
             <h1 class="site-title">Julien Offray</h1>
-            <h2 class="site-subtitle">Digital Product Design & Development</h2>
+            <h2 class="site-subtitle">Digital Product Design Student</h2>
           </div>
 
-          <!-- Hamburger / Toggle -->
           <button id="nav-toggle"
                   class="nav-toggle"
                   aria-controls="primary-nav"
@@ -46,65 +35,88 @@
             <span class="hamburger" aria-hidden="true"></span>
           </button>
 
-          <!-- Primary navigation -->
           <nav id="primary-nav" class="primary-nav" role="navigation" aria-label="Primary">
             <ul>
-              <li><a href="index.html">Home</a></li>
-              <li><a href="resume.html">Resume</a></li>
-              <li><a href="#projects">Projects</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="index.html" class="active">Home</a></li>
+              <li><a href="resume.html">Resume & Projects</a></li>
+              <li><a href="resume.html#contact">Contact</a></li>
               <li><a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener noreferrer" class="nav-link-cta">LinkedIn</a></li>
             </ul>
           </nav>
         </div>
 
         <p class="lead">
-          I study <strong>Digital Product Design and Development</strong> at
-          <strong>HfG Schwäbisch Gmünd</strong>. I focus on user-centered,
-          technology-driven product concepts and clear, functional interfaces. In
-          <strong>March–July 2025</strong>, I worked as a
-          <strong>UX Designer & Developer</strong> at
-          <strong>Capgemini</strong> in Stuttgart.
+          I am studying <strong>Digital Product Design and Development</strong>
+          at <strong>HfG Schwäbisch Gmünd</strong> (6th semester) and currently
+          spending my exchange semester at
+          <strong>San José State University</strong> in California. My focus is
+          on user-centered, technology-driven product concepts and clear,
+          functional interfaces.
         </p>
       </header>
 
       <main>
-        <section aria-label="About Me">
-          <h3>Selected Projects</h3>
+        <section id="about">
+          <h3>About Me</h3>
           <p>
-            For a concise overview of my background, check out my
-            <a href="resume.html" class="text-link">resume</a>.
+            Welcome to my portfolio! I'm passionate about creating meaningful digital 
+            experiences that solve real problems. My approach combines design thinking 
+            with technical implementation to create products that are both beautiful 
+            and functional.
           </p>
+          <p>
+            During my studies, I've worked on various projects ranging from mobile 
+            health applications to IoT solutions for beekeeping. I believe in 
+            user-centered design and iterative development processes.
+          </p>
+        </section>
+
+        <section id="education-preview">
+          <h3>Current Education</h3>
+          <ul class="edu-list">
+            <li class="edu-item">
+              <img src="images/hfg.jpeg" alt="HfG" class="edu-logo" width="56" height="56" loading="lazy" />
+              <p class="edu-text">
+                <strong>HfG Schwäbisch Gmünd:</strong> since Mar 2023 – B.A.
+                Digital Product Design & Development
+              </p>
+            </li>
+            <li class="edu-item">
+              <img src="images/sjsu.jpeg" alt="SJSU" class="edu-logo" width="56" height="56" loading="lazy" />
+              <p class="edu-text">
+                <strong>San José State University (SJSU):</strong> California – Exchange Semester
+              </p>
+            </li>
+          </ul>
+          <p style="text-align: center; margin-top: 1.5rem;">
+            <a href="resume.html" class="btn-link">View Full Resume & Projects →</a>
+          </p>
+        </section>
+
+        <section id="contact-preview">
+          <h3>Get in Touch</h3>
+          <p style="text-align: center; margin-bottom: 1.5rem;">
+            I'm always interested in new opportunities and collaborations.
+          </p>
+          <address>
+            <a href="mailto:julien.offray@gmail.com">julien.offray@gmail.com</a>
+            <a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://github.com/julien1703" target="_blank" rel="noopener">GitHub</a>
+          </address>
         </section>
       </main>
     </div>
 
     <footer>
-      <p>
-        © <span id="year"></span> by Julien Offray |
-        <a href="mailto:julien.offray@gmail.com" class="text-link">julien.offray@gmail.com</a>
-      </p>
-      <nav aria-label="Social Media">
-        <ul class="social-buttons">
-          <li>
-            <a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener noreferrer" class="btn-social linkedin">
-              <img src="images/icon-logo-linkedin.png" alt="LinkedIn" class="icon" loading="lazy" />
-            </a>
-          </li>
-          <li>
-            <a href="https://github.com/julien1703" target="_blank" rel="noopener noreferrer" class="btn-social github">
-              <img src="images/github.svg" alt="GitHub" class="icon" loading="lazy" />
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <p>© <span id="year"></span> Julien Offray</p>
     </footer>
 
+    
+    <script src="js/sketch.js"></script>
+
     <script>
-      /* Year */
       document.getElementById("year").textContent = new Date().getFullYear();
 
-      /* Navigation toggle (accessible) */
       (function () {
         const toggle = document.getElementById('nav-toggle');
         const nav = document.getElementById('primary-nav');
@@ -120,9 +132,7 @@
           const isOpen = toggle.getAttribute('aria-expanded') === 'true';
           setExpanded(!isOpen);
           if (!isOpen) {
-            // move focus to first link for keyboard users
             focusableLinks[0].focus();
-            // prevent body scroll
             document.body.style.overflow = 'hidden';
           } else {
             toggle.focus();
@@ -130,7 +140,6 @@
           }
         });
 
-        // Close on Esc
         document.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
             setExpanded(false);
@@ -139,17 +148,13 @@
           }
         });
 
-        // Close when clicking on a nav link (mobile)
         focusableLinks.forEach((a) => {
           a.addEventListener('click', () => {
-            if (window.getComputedStyle(toggle).display !== 'none') {
-              setExpanded(false);
-              document.body.style.overflow = '';
-            }
+            if (window.getComputedStyle(toggle).display !== 'none') setExpanded(false);
+            document.body.style.overflow = '';
           });
         });
 
-        // close when clicking outside nav on small screens
         document.addEventListener('click', (e) => {
           const isOpen = toggle.getAttribute('aria-expanded') === 'true';
           if (!isOpen) return;
