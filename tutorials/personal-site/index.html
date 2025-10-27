@@ -1,169 +1,290 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Julien Offray – Digital Product Design Student</title>
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Julien Offray – Digital Product Designer</title>
+  <meta name="description" content="Portfolio of Julien Offray – Digital Product Design Student specializing in user-centered design and interactive experiences." />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Zum Inhalt springen</a>
 
-    <meta name="description" content="Resume & selected projects by Julien Offray — Digital Product Design Student" />
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Space+Grotesk:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <header id="nav-header" class="site-header" role="banner">
+    <div class="header-container">
+      <a href="#hero" class="brand" aria-label="Startseite">
+        <span class="brand-mark">JO</span>
+        <span class="brand-text">Julien Offray</span>
+      </a>
+      <nav class="nav-desktop" aria-label="Hauptnavigation">
+        <ul class="nav-list">
+          <li><a href="#about"><span class="nav-num">01</span><span class="nav-label">About</span></a></li>
+          <li><a href="#projects"><span class="nav-num">02</span><span class="nav-label">Projekte</span></a></li>
+          <li><a href="#resume"><span class="nav-num">03</span><span class="nav-label">Resumé</span></a></li>
+          <li><a href="#contact"><span class="nav-num">04</span><span class="nav-label">Kontakt</span></a></li>
+        </ul>
+      </nav>
+      <div class="nav-cta">
+        <a href="#contact" class="btn btn-ghost">Kontakt</a>
+        <button id="nav-toggle" class="nav-toggle" aria-controls="mobile-dropdown" aria-expanded="false" aria-label="Menü öffnen">
+          <span class="hamburger"></span>
+        </button>
+      </div>
+    </div>
+    <div id="mobile-dropdown" class="mobile-dropdown" aria-label="Mobiles Menü">
+      <ul>
+        <li><a class="pill" href="#about"><span class="num">01</span><span>About</span><span class="arrow">→</span></a></li>
+        <li><a class="pill" href="#projects"><span class="num">02</span><span>Projekte</span><span class="arrow">→</span></a></li>
+        <li><a class="pill" href="#resume"><span class="num">03</span><span>Resumé</span><span class="arrow">→</span></a></li>
+        <li><a class="pill" href="#contact"><span class="num">04</span><span>Kontakt</span><span class="arrow">→</span></a></li>
+      </ul>
+    </div>
+  </header>
 
-   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+  <main id="main">
+    <section id="hero" class="hero" aria-labelledby="hero-title">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1 class="hero-title" id="hero-title"><span class="hero-greeting">Hi, ich bin</span>Julien Offray</h1>
+          <p class="hero-subtitle">Digital Product Design Student</p>
+          <p class="hero-description">Creating meaningful digital experiences through user-centered design. Currently studying at HfG Schwäbisch Gmünd and on exchange at San José State University, California.</p>
+          <div class="hero-actions">
+            <a href="#projects" class="btn btn-primary">Projekte ansehen</a>
+            <a href="#contact" class="btn btn-secondary">Lass uns sprechen</a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <link rel="stylesheet" href="css/styles.css" />
-  </head>
-  <body class="home">
-    <a href="#top" class="fixed-cta" aria-label="Back to top">↑ Top</a>
+    <section id="about" class="section" aria-labelledby="about-title">
+      <div class="section-container">
+        <h2 class="section-title" id="about-title">About Me</h2>
+        <div class="about-grid">
+          <div class="about-text">
+            <p class="lead">I'm passionate about creating digital experiences that solve real problems and improve people's lives through thoughtful design and innovative technology.</p>
+            <p>My approach combines design thinking with technical implementation, ensuring products are both beautiful and functional. I believe in user-centered design, iterative processes, and the power of collaboration.</p>
+            <p>Currently in my 6th semester at <strong>HfG Schwäbisch Gmünd</strong>, I'm expanding my knowledge at <strong>San José State University</strong> in California, focusing on interaction design, prototyping, and emerging technologies.</p>
+          </div>
+          <div class="skills">
+            <div class="skill-group">
+              <h3>Design</h3>
+              <ul>
+                <li>UI/UX Design</li>
+                <li>Prototyping</li>
+                <li>Design Systems</li>
+                <li>User Research</li>
+              </ul>
+            </div>
+            <div class="skill-group">
+              <h3>Tools</h3>
+              <ul>
+                <li>Figma</li>
+                <li>Adobe Suite</li>
+                <li>HTML/CSS/JS</li>
+                <li>React</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <div class="content-wrapper">
-      <header id="top" class="site-header" role="banner">
-        <div class="header-inner">
-          <div class="brand">
-            <h1 class="site-title">Julien Offray</h1>
-            <h2 class="site-subtitle">Digital Product Design Student</h2>
+    <section id="projects" class="section section-dark" aria-labelledby="projects-title">
+      <div class="section-container">
+        <h2 class="section-title" id="projects-title">Ausgewählte Projekte</h2>
+        <p class="section-intro">A collection of work showcasing my approach to digital product design.</p>
+
+        <article class="project" aria-labelledby="proj1-title">
+          <div class="project-media">
+            <div class="carousel" id="carousel-1" role="region" aria-label="Health cAIre gallery" aria-live="polite">
+              <div class="carousel-track">
+                <img src="images/Health-1.png" alt="Health cAIre – dashboard overview" class="active" loading="lazy" decoding="async" />
+                <img src="images/Health-2.png" alt="Health cAIre – metrics screen" loading="lazy" decoding="async" />
+                <img src="images/Health-3.png" alt="Health cAIre – insights screen" loading="lazy" decoding="async" />
+              </div>
+              <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
+              <button class="carousel-btn next" aria-label="Next slide">›</button>
+              <div class="carousel-dots" aria-hidden="true">
+                <button class="dot active" aria-label="Slide 1"></button>
+                <button class="dot" aria-label="Slide 2"></button>
+                <button class="dot" aria-label="Slide 3"></button>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3 id="proj1-title">Health cAIre</h3>
+            <p class="project-lead">AI-powered health application making personal health data understandable and actionable.</p>
+            <p>Complete design process from ideation through user research, wireframing, and final UI system. Focus on delivering motivating insights through clean, accessible interfaces.</p>
+            <div class="project-tags">
+              <span>UI/UX Design</span>
+              <span>Mobile App</span>
+              <span>Health Tech</span>
+              <span>AI</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project project-reverse" aria-labelledby="proj2-title">
+          <div class="project-media">
+            <div class="carousel" id="carousel-2" role="region" aria-label="BeeSmart gallery" aria-live="polite">
+              <div class="carousel-track">
+                <img src="images/Bee-1.png" alt="BeeSmart – dashboard" class="active" loading="lazy" decoding="async" />
+                <img src="images/Bee-2.png" alt="BeeSmart – monitoring screen" loading="lazy" decoding="async" />
+              </div>
+              <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
+              <button class="carousel-btn next" aria-label="Next slide">›</button>
+              <div class="carousel-dots" aria-hidden="true">
+                <button class="dot active" aria-label="Slide 1"></button>
+                <button class="dot" aria-label="Slide 2"></button>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3 id="proj2-title">BeeSmart</h3>
+            <p class="project-lead">Digital co-pilot for beekeeping combining IoT technology with intuitive design.</p>
+            <p>Features mite tracking, treatment documentation, and AI-based health evaluation. Designed for both beginners and experienced beekeepers with trend-based insights.</p>
+            <div class="project-tags">
+              <span>IoT</span>
+              <span>Mobile App</span>
+              <span>Data Viz</span>
+              <span>AgTech</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="project" aria-labelledby="proj3-title">
+          <div class="project-media">
+            <div class="carousel" id="carousel-3" role="region" aria-label="Smart Glasses gallery" aria-live="polite">
+              <div class="carousel-track">
+                <img src="images/Smart-1.png" alt="Smart glasses – main view UI" class="active" loading="lazy" decoding="async" />
+                <img src="images/Smart-2.png" alt="Smart glasses – side view" loading="lazy" decoding="async" />
+                <img src="images/Smart-3.png" alt="Smart glasses – technical diagram" loading="lazy" decoding="async" />
+              </div>
+              <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
+              <button class="carousel-btn next" aria-label="Next slide">›</button>
+              <div class="carousel-dots" aria-hidden="true">
+                <button class="dot active" aria-label="Slide 1"></button>
+                <button class="dot" aria-label="Slide 2"></button>
+                <button class="dot" aria-label="Slide 3"></button>
+              </div>
+            </div>
+          </div>
+          <div class="project-content">
+            <h3 id="proj3-title">Smart Glasses for the Blind</h3>
+            <p class="project-lead">IoT solution enhancing social participation for visually impaired individuals through AI-powered environmental perception.</p>
+            <p>Developed in the Redesign course, featuring a Raspberry Pi 4 with camera and touch sensor. The system uses OpenAI's image analysis to generate descriptive audio through bone-conduction headsets, allowing users to perceive their environment while maintaining awareness of surrounding sounds.</p>
+            <div class="project-tags">
+              <span>IoT</span>
+              <span>AI Vision</span>
+              <span>Accessibility</span>
+              <span>Raspberry Pi</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="resume" class="section" aria-labelledby="resume-title">
+      <div class="section-container">
+        <h2 class="section-title" id="resume-title">Education & Experience</h2>
+        <div class="resume-grid">
+          <div class="resume-category">
+            <h3 class="category-title">Education</h3>
+            <div class="timeline-item">
+              <img src="images/hfg.jpeg" alt="HfG logo" class="timeline-logo" loading="lazy" decoding="async" />
+              <div class="timeline-content">
+                <h4>HfG Schwäbisch Gmünd</h4>
+                <p class="timeline-date">March 2023 – Present</p>
+                <p>B.A. Digital Product Design & Development. Currently in 6th semester.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <img src="images/sjsu.jpeg" alt="SJSU logo" class="timeline-logo" loading="lazy" decoding="async" />
+              <div class="timeline-content">
+                <h4>San José State University</h4>
+                <p class="timeline-date">Fall 2024</p>
+                <p>Exchange semester in California focusing on interaction design.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <img src="images/hdm.jpeg" alt="Hochschule der Medien logo" class="timeline-logo" loading="lazy" decoding="async" />
+              <div class="timeline-content">
+                <h4>Hochschule der Medien</h4>
+                <p class="timeline-date">Oct 2021 – Jun 2022</p>
+                <p>Packaging Technology (VT7).</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <img src="images/pro.jpeg" alt="ProGenius logo" class="timeline-logo" loading="lazy" decoding="async" />
+              <div class="timeline-content">
+                <h4>ProGenius Berufskolleg</h4>
+                <p class="timeline-date">Sep 2019 – Jun 2021</p>
+                <p>Assistant for Information & Communication Technology.</p>
+              </div>
+            </div>
           </div>
 
-          <button id="nav-toggle"
-                  class="nav-toggle"
-                  aria-controls="primary-nav"
-                  aria-expanded="false"
-                  aria-label="Open navigation">
-            <span class="hamburger" aria-hidden="true"></span>
-          </button>
-
-          <nav id="primary-nav" class="primary-nav" role="navigation" aria-label="Primary">
-            <ul>
-              <li><a href="index.html" class="active">Home</a></li>
-              <li><a href="resume.html">Resume & Projects</a></li>
-              <li><a href="resume.html#contact">Contact</a></li>
-              <li><a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener noreferrer" class="nav-link-cta">LinkedIn</a></li>
-            </ul>
-          </nav>
+          <div class="resume-category">
+            <h3 class="category-title">Experience</h3>
+            <div class="timeline-item">
+              <img src="images/cap.jpeg" alt="Capgemini logo" class="timeline-logo" loading="lazy" decoding="async" />
+              <div class="timeline-content">
+                <h4>Capgemini</h4>
+                <p class="timeline-date">Mar 2025 – Jul 2025</p>
+                <p>UX Design & Development Internship in Stuttgart. Enterprise-level design systems.</p>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <p class="lead">
-          I am studying <strong>Digital Product Design and Development</strong>
-          at <strong>HfG Schwäbisch Gmünd</strong> (6th semester) and currently
-          spending my exchange semester at
-          <strong>San José State University</strong> in California. My focus is
-          on user-centered, technology-driven product concepts and clear,
-          functional interfaces.
-        </p>
-      </header>
+    <section id="contact" class="section section-dark" aria-labelledby="contact-title">
+      <div class="section-container contact-container">
+        <h2 class="section-title" id="contact-title">Kontakt</h2>
+        <p class="section-intro">Ich freue mich über neue Möglichkeiten und Gespräche über Design.</p>
+        <div class="contact-grid">
+          <a href="mailto:julien.offray@gmail.com" class="contact-card">
+            <svg class="contact-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            <h4>Email</h4>
+            <p>julien.offray@gmail.com</p>
+          </a>
+          <a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener" class="contact-card">
+            <svg class="contact-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/>
+              <rect x="2" y="9" width="4" height="12"/>
+              <circle cx="4" cy="4" r="2"/>
+            </svg>
+            <h4>LinkedIn</h4>
+            <p>Let's connect</p>
+          </a>
+          <a href="https://github.com/julien1703" target="_blank" rel="noopener" class="contact-card">
+            <svg class="contact-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+            </svg>
+            <h4>GitHub</h4>
+            <p>View code</p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
 
-      <main>
-        <section id="about">
-          <h3>About Me</h3>
-          <p>
-            Welcome to my portfolio! I'm passionate about creating meaningful digital 
-            experiences that solve real problems. My approach combines design thinking 
-            with technical implementation to create products that are both beautiful 
-            and functional.
-          </p>
-          <p>
-            During my studies, I've worked on various projects ranging from mobile 
-            health applications to IoT solutions for beekeeping. I believe in 
-            user-centered design and iterative development processes.
-          </p>
-        </section>
-
-        <section id="education-preview">
-          <h3>Current Education</h3>
-          <ul class="edu-list">
-            <li class="edu-item">
-              <img src="images/hfg.jpeg" alt="HfG" class="edu-logo" width="56" height="56" loading="lazy" />
-              <p class="edu-text">
-                <strong>HfG Schwäbisch Gmünd:</strong> since Mar 2023 – B.A.
-                Digital Product Design & Development
-              </p>
-            </li>
-            <li class="edu-item">
-              <img src="images/sjsu.jpeg" alt="SJSU" class="edu-logo" width="56" height="56" loading="lazy" />
-              <p class="edu-text">
-                <strong>San José State University (SJSU):</strong> California – Exchange Semester
-              </p>
-            </li>
-          </ul>
-          <p style="text-align: center; margin-top: 1.5rem;">
-            <a href="resume.html" class="btn-link">View Full Resume & Projects →</a>
-          </p>
-        </section>
-
-        <section id="contact-preview">
-          <h3>Get in Touch</h3>
-          <p style="text-align: center; margin-bottom: 1.5rem;">
-            I'm always interested in new opportunities and collaborations.
-          </p>
-          <address>
-            <a href="mailto:julien.offray@gmail.com">julien.offray@gmail.com</a>
-            <a href="https://www.linkedin.com/in/julien-offray-b8b249283/" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="https://github.com/julien1703" target="_blank" rel="noopener">GitHub</a>
-          </address>
-        </section>
-      </main>
+  <footer class="footer" role="contentinfo">
+    <div class="footer-container">
+      <p>&copy; <span id="year"></span> Julien Offray. Crafted with care.</p>
     </div>
+  </footer>
 
-    <footer>
-      <p>© <span id="year"></span> Julien Offray</p>
-    </footer>
-
-    
-    <script src="js/sketch.js"></script>
-
-    <script>
-      document.getElementById("year").textContent = new Date().getFullYear();
-
-      (function () {
-        const toggle = document.getElementById('nav-toggle');
-        const nav = document.getElementById('primary-nav');
-        const focusableLinks = nav.querySelectorAll('a');
-
-        function setExpanded(value) {
-          toggle.setAttribute('aria-expanded', String(value));
-          nav.classList.toggle('open', value);
-          document.documentElement.classList.toggle('nav-open', value);
-        }
-
-        toggle.addEventListener('click', () => {
-          const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-          setExpanded(!isOpen);
-          if (!isOpen) {
-            focusableLinks[0].focus();
-            document.body.style.overflow = 'hidden';
-          } else {
-            toggle.focus();
-            document.body.style.overflow = '';
-          }
-        });
-
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
-            setExpanded(false);
-            toggle.focus();
-            document.body.style.overflow = '';
-          }
-        });
-
-        focusableLinks.forEach((a) => {
-          a.addEventListener('click', () => {
-            if (window.getComputedStyle(toggle).display !== 'none') setExpanded(false);
-            document.body.style.overflow = '';
-          });
-        });
-
-        document.addEventListener('click', (e) => {
-          const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-          if (!isOpen) return;
-          if (!nav.contains(e.target) && !toggle.contains(e.target)) {
-            setExpanded(false);
-            document.body.style.overflow = '';
-          }
-        });
-      })();
-    </script>
-  </body>
+  <script src="js/main.js" defer></script>
+  <script src="js/sketch.js" defer></script>
+</body>
 </html>
