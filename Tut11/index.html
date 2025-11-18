@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEURAL DREAMS ✨</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Main Canvas Background -->
+    <canvas id="backgroundCanvas"></canvas>
+    
+    <!-- Floating Orbs -->
+    <div class="orb-container" id="orbContainer"></div>
+    
+    <!-- Interactive Particles -->
+    <canvas id="particleCanvas"></canvas>
+    
+    <!-- Generative Art Layer -->
+    <canvas id="generativeCanvas"></canvas>
+    
+    <!-- Glitch Text Overlay -->
+    <div class="glitch-overlay">
+        <h1 class="glitch-title" data-text="NEURAL">NEURAL</h1>
+        <h1 class="glitch-title" data-text="DREAMS">DREAMS</h1>
+    </div>
+    
+    <!-- Secret Messages that used to appear on interaction (removed) -->
+    
+    <!-- Interactive UI Elements - Always Visible -->
+    <div class="controls-panel" id="controlsPanel">
+        <div class="panel-title">✨ CONTROLS</div>
+        <div class="control-item">
+            <span class="control-key">🎨 DRAG</span>
+            <span class="control-desc">Paint dreams</span>
+        </div>
+        <div class="control-item">
+            <span class="control-key">🖱️ CLICK</span>
+            <span class="control-desc">Energy burst</span>
+        </div>
+        <div class="control-item">
+            <span class="control-key">SPACE</span>
+            <span class="control-desc">Shift dimension</span>
+        </div>
+        <div class="control-item" id="controlRain">
+            <span class="control-status">○</span>
+            <span class="control-key">R</span>
+            <span class="control-desc">Color rain</span>
+        </div>
+        <div class="control-item" id="controlGenerative">
+            <span class="control-status">○</span>
+            <span class="control-key">G</span>
+            <span class="control-desc">Generative art</span>
+        </div>
+        <div class="control-item" id="controlFreeze">
+            <span class="control-status">○</span>
+            <span class="control-key">F</span>
+            <span class="control-desc">Freeze time</span>
+        </div>
+        <div class="control-item" id="controlWave">
+            <span class="control-status">○</span>
+            <span class="control-key">W</span>
+            <span class="control-desc">Wave effect</span>
+        </div>
+        <div class="control-item" id="controlExplode">
+            <span class="control-status">○</span>
+            <span class="control-key">E</span>
+            <span class="control-desc">Particle explosion</span>
+        </div>
+    </div>
+    
+    <!-- Dimension Counter -->
+    <div class="dimension-counter" id="dimensionCounter">
+        <span>DIMENSION</span>
+        <span class="dimension-number">01</span>
+    </div>
+
+    <!-- Mode Indicator -->
+    <div class="mode-indicator" id="modeIndicator">
+        <span class="mode-icon">🎨</span>
+        <span class="mode-text">PAINT MODE</span>
+    </div>
+
+    <script>
+        // ====== GLOBAL STATE ======
+        let dimension = 1;
+        let isRaining = false;
+        let isFrozen = false;
+        let isGenerativeMode = false;
+        let isWaveMode = false;
+        let isExploding = false;
+        let raindrops = [];
+        
+        // ====== BACKGROUND GRADIENT ANIMATION ======
+        const bgCanvas = document.getElementById('backgroundCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        
+        function resizeCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        const dimensions = [
+            ['#667eea', '#764ba2', '#f093fb'],
+            ['#4facfe', '#00f2fe', '#43e97b'],
+            ['#fa709a', '#fee140', '#30cfd0'],
+            ['#a8edea', '#fed6e3', '#f093fb'],
+            ['#ffecd2', '#fcb69f', '#ff9a9e']
+        ];
+        
+        let gradientOffset = 0;
+        
+        function animateBackground() {
+            if (isFrozen) {
+                requestAnimationFrame(animateBackground);
+                return;
+            }
+            
+            gradientOffset += 0.002;
+            const colors = dimensions[dimension - 1];
+            const gradient = bgCtx.createLinearGradient(
+                0, 0,
+                Math.cos(gradientOffset) * bgCanvas.width,
+                Math.sin(gradientOffset) * bgCanvas.height
+            );
+            
+            gradient.addColorStop(0, colors[0]);
+            gradient.addColorStop(0.5, colors[1]);
+            gradient.addColorStop(1, colors[2]);
+            
+            bgCtx.fillStyle = gradient;
+            bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+            
+            requestAnimationFrame(animateBackground);
+        }
+        animateBackground();
+        
+        // ====== FLOATING ORBS ======
+        const orbContainer = document.getElementById('orbContainer');
+        const numOrbs = 20;
+        
+        for (let i = 0; i < numOrbs; i++) {
+            const orb = document.createElement('div');
+            orb.className = 'orb';
+            orb.style.left = Math.random() * 100 + '%';
+            orb.style.top = Math.random() * 100 + '%';
+            orb.style.animationDelay = Math.random() * 5 + 's';
+            orb.style.animationDuration = (15 + Math.random() * 10) + 's';
+            
+            const size = 50 + Math.random() * 150;
+            orb.style.width = size + 'px';
+            orb.style.height = size + 'px';
+            
+            // Orb click intentionally left with no easter-egg behavior
+            
+            orbContainer.appendChild(orb);
+        }
+        
+        // ====== GENERATIVE ART CANVAS ======
+        const genCanvas = document.getElementById('generativeCanvas');
+        const genCtx = genCanvas.getContext('2d');
+        genCanvas.width = window.innerWidth;
+        genCanvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            genCanvas.width = window.innerWidth;
+            genCanvas.height = window.innerHeight;
+        });
+        
+        let shapes = [];
+        
+        class GenerativeShape {
+            constructor() {
+                this.x = Math.random() * genCanvas.width;
+                this.y = Math.random() * genCanvas.height;
+                this.size = Math.random() * 50 + 20;
+                this.rotation = Math.random() * Math.PI * 2;
+                this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+                this.sides = Math.floor(Math.random() * 5) + 3;
+                this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
+                this.alpha = Math.random() * 0.5 + 0.3;
+            }
+            
+            update() {
+                this.rotation += this.rotationSpeed;
+            }
+            
+            draw() {
+                genCtx.save();
+                genCtx.translate(this.x, this.y);
+                genCtx.rotate(this.rotation);
+                genCtx.fillStyle = this.color;
+                genCtx.globalAlpha = this.alpha;
+                
+                genCtx.beginPath();
+                for (let i = 0; i < this.sides; i++) {
+                    const angle = (i / this.sides) * Math.PI * 2;
+                    const x = Math.cos(angle) * this.size;
+                    const y = Math.sin(angle) * this.size;
+                    if (i === 0) genCtx.moveTo(x, y);
+                    else genCtx.lineTo(x, y);
+                }
+                genCtx.closePath();
+                genCtx.fill();
+                genCtx.restore();
+            }
+        }
+        
+        function toggleGenerativeMode() {
+            isGenerativeMode = !isGenerativeMode;
+            if (isGenerativeMode) {
+                for (let i = 0; i < 30; i++) {
+                    shapes.push(new GenerativeShape());
+                }
+                updateModeIndicator('🌀', 'GENERATIVE MODE');
+            } else {
+                shapes = [];
+                genCtx.clearRect(0, 0, genCanvas.width, genCanvas.height);
+                updateModeIndicator('🎨', 'PAINT MODE');
+            }
+        }
+        
+        function animateGenerative() {
+            if (isGenerativeMode && !isFrozen) {
+                genCtx.clearRect(0, 0, genCanvas.width, genCanvas.height);
+                shapes.forEach(shape => {
+                    shape.update();
+                    shape.draw();
+                });
+            }
+            requestAnimationFrame(animateGenerative);
+        }
+        animateGenerative();
+        
+        // ====== PARTICLE SYSTEM ======
+        const particleCanvas = document.getElementById('particleCanvas');
+        const pCtx = particleCanvas.getContext('2d');
+        particleCanvas.width = window.innerWidth;
+        particleCanvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        });
+        
+        let particles = [];
+        let mouse = { x: 0, y: 0 };
+        let isDrawing = false;
+        
+        class Particle {
+            constructor(x, y, color, speed = 1) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 4 + 1;
+                this.speedX = (Math.random() - 0.5) * 3 * speed;
+                this.speedY = (Math.random() - 0.5) * 3 * speed;
+                this.color = color;
+                this.life = 100;
+            }
+            
+            update() {
+                if (!isFrozen) {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    this.life -= 1;
+                    this.size *= 0.98;
+                }
+            }
+            
+            draw() {
+                pCtx.fillStyle = this.color;
+                pCtx.globalAlpha = this.life / 100;
+                pCtx.beginPath();
+                pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                pCtx.fill();
+            }
+        }
+        
+        // Raindrop system
+        class Raindrop {
+            constructor() {
+                this.x = Math.random() * particleCanvas.width;
+                this.y = -10;
+                this.speed = Math.random() * 5 + 3;
+                this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            }
+            
+            update() {
+                this.y += this.speed;
+            }
+            
+            draw() {
+                pCtx.strokeStyle = this.color;
+                pCtx.lineWidth = 2;
+                pCtx.beginPath();
+                pCtx.moveTo(this.x, this.y);
+                pCtx.lineTo(this.x, this.y + 20);
+                pCtx.stroke();
+            }
+        }
+        
+        particleCanvas.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            
+            if (isDrawing && !isFrozen) {
+                const numParticles = isWaveMode ? 10 : 5;
+                const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0080', '#00ff80'];
+                
+                for (let i = 0; i < numParticles; i++) {
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const particle = new Particle(mouse.x, mouse.y, color);
+                    
+                    if (isWaveMode) {
+                        const angle = (i / numParticles) * Math.PI * 2;
+                        particle.speedX = Math.cos(angle) * 2;
+                        particle.speedY = Math.sin(angle) * 2;
+                    }
+                    
+                    particles.push(particle);
+                }
+            }
+        });
+        
+        particleCanvas.addEventListener('mousedown', () => {
+            isDrawing = true;
+        });
+        
+        particleCanvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+        });
+        
+        particleCanvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            mouse.x = touch.clientX;
+            mouse.y = touch.clientY;
+            
+            if (!isFrozen) {
+                for (let i = 0; i < 3; i++) {
+                    const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0080', '#00ff80'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particles.push(new Particle(mouse.x, mouse.y, color));
+                }
+            }
+        });
+        
+        particleCanvas.addEventListener('click', (e) => {
+            if (!isFrozen) {
+                for (let i = 0; i < 80; i++) {
+                    const colors = ['#ffffff', '#ff00ff', '#00ffff', '#ffff00'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particles.push(new Particle(e.clientX, e.clientY, color, 2));
+                }
+            }
+        });
+        
+        function animateParticles() {
+            pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            
+            // Continuous explosion effect
+            if (isExploding && !isFrozen) {
+                if (Math.random() < 0.1) {
+                    const x = Math.random() * particleCanvas.width;
+                    const y = Math.random() * particleCanvas.height;
+                    for (let i = 0; i < 20; i++) {
+                        const colors = ['#ff00ff', '#00ffff', '#ffff00', '#ff0080', '#00ff80'];
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        const particle = new Particle(x, y, color, 2);
+                        particle.speedX = (Math.random() - 0.5) * 10;
+                        particle.speedY = (Math.random() - 0.5) * 10;
+                        particles.push(particle);
+                    }
+                }
+            }
+            
+            // Draw raindrops
+            if (isRaining && !isFrozen) {
+                if (Math.random() < 0.3) {
+                    raindrops.push(new Raindrop());
+                }
+                
+                for (let i = raindrops.length - 1; i >= 0; i--) {
+                    raindrops[i].update();
+                    raindrops[i].draw();
+                    
+                    if (raindrops[i].y > particleCanvas.height) {
+                        raindrops.splice(i, 1);
+                    }
+                }
+            }
+            
+            // Draw particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                
+                if (particles[i].life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            
+            pCtx.globalAlpha = 1;
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+        
+        // ====== KEYBOARD CONTROLS ======
+        function updateControlStatus(elementId, isActive) {
+            const element = document.getElementById(elementId);
+            const status = element.querySelector('.control-status');
+            status.textContent = isActive ? '●' : '○';
+            status.style.color = isActive ? '#00ff00' : 'rgba(255, 255, 255, 0.3)';
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            // Space - Dimension shift
+            if (e.code === 'Space') {
+                e.preventDefault();
+                dimension = (dimension % dimensions.length) + 1;
+                
+                const counter = document.querySelector('.dimension-number');
+                counter.textContent = dimension.toString().padStart(2, '0');
+                counter.style.transform = 'scale(1.5)';
+                setTimeout(() => counter.style.transform = 'scale(1)', 200);
+                
+                for (let i = 0; i < 100; i++) {
+                    const x = window.innerWidth / 2;
+                    const y = window.innerHeight / 2;
+                    const colors = dimensions[dimension - 1];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    const particle = new Particle(x, y, color, 3);
+                    particle.speedX = (Math.random() - 0.5) * 20;
+                    particle.speedY = (Math.random() - 0.5) * 20;
+                    particles.push(particle);
+                }
+                
+                const titles = document.querySelectorAll('.glitch-title');
+                titles.forEach(title => {
+                    title.style.animation = 'none';
+                    setTimeout(() => title.style.animation = '', 10);
+                });
+            }
+            
+            // R - Rain mode
+            if (e.key.toLowerCase() === 'r') {
+                isRaining = !isRaining;
+                updateControlStatus('controlRain', isRaining);
+                updateModeIndicator(isRaining ? '🌧️' : '🎨', isRaining ? 'RAIN MODE' : 'PAINT MODE');
+                if (!isRaining) raindrops = [];
+            }
+            
+            // G - Generative mode
+            if (e.key.toLowerCase() === 'g') {
+                toggleGenerativeMode();
+                updateControlStatus('controlGenerative', isGenerativeMode);
+            }
+            
+            // F - Freeze time
+            if (e.key.toLowerCase() === 'f') {
+                isFrozen = !isFrozen;
+                updateControlStatus('controlFreeze', isFrozen);
+                updateModeIndicator(isFrozen ? '❄️' : '🎨', isFrozen ? 'TIME FROZEN' : 'PAINT MODE');
+            }
+            
+            // W - Wave mode (particles spread in circle pattern)
+            if (e.key.toLowerCase() === 'w') {
+                isWaveMode = !isWaveMode;
+                updateControlStatus('controlWave', isWaveMode);
+                updateModeIndicator(isWaveMode ? '🌊' : '🎨', isWaveMode ? 'WAVE MODE' : 'PAINT MODE');
+            }
+            
+            // E - Continuous explosion mode
+            if (e.key.toLowerCase() === 'e') {
+                isExploding = !isExploding;
+                updateControlStatus('controlExplode', isExploding);
+                updateModeIndicator(isExploding ? '💥' : '🎨', isExploding ? 'EXPLOSION MODE' : 'PAINT MODE');
+            }
+        });
+        
+        // Easter-egg behavior removed to simplify interactions.
+        
+        // ====== UI HELPERS ======
+        function updateModeIndicator(icon, text) {
+            const indicator = document.getElementById('modeIndicator');
+            const iconEl = indicator.querySelector('.mode-icon');
+            const textEl = indicator.querySelector('.mode-text');
+            
+            iconEl.textContent = icon;
+            textEl.textContent = text;
+            
+            indicator.style.transform = 'translateX(0)';
+            setTimeout(() => {
+                indicator.style.transform = 'translateX(calc(100% + 30px))';
+            }, 2000);
+        }
+        
+        // Hide controls hint after 8 seconds
+        // Now controls are always visible, so we don't hide them!
+    </script>
+</body>
+</html>

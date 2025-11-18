@@ -1,0 +1,493 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    cursor: crosshair;
+    background: #000;
+}
+
+/* ====== CANVAS LAYERS ====== */
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#particleCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    pointer-events: all;
+}
+
+#generativeCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* ====== FLOATING ORBS (Interactive!) ====== */
+.orb-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(255, 255, 255, 0.8), 
+        rgba(255, 255, 255, 0.3), 
+        rgba(255, 255, 255, 0));
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 0 60px rgba(255, 255, 255, 0.5),
+        inset 0 0 60px rgba(255, 255, 255, 0.3);
+    animation: float 20s infinite ease-in-out;
+    mix-blend-mode: screen;
+    pointer-events: all;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.orb:hover {
+    transform: scale(1.3) !important;
+    box-shadow: 
+        0 0 100px rgba(255, 255, 255, 0.8),
+        inset 0 0 80px rgba(255, 255, 255, 0.5);
+}
+
+.orb:nth-child(odd) {
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(255, 0, 255, 0.7), 
+        rgba(255, 0, 255, 0.3), 
+        rgba(255, 0, 255, 0));
+}
+
+.orb:nth-child(3n) {
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(0, 255, 255, 0.7), 
+        rgba(0, 255, 255, 0.3), 
+        rgba(0, 255, 255, 0));
+}
+
+.orb:nth-child(4n) {
+    background: radial-gradient(circle at 30% 30%, 
+        rgba(255, 255, 0, 0.7), 
+        rgba(255, 255, 0, 0.3), 
+        rgba(255, 255, 0, 0));
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(120px, -120px) scale(1.3);
+    }
+    50% {
+        transform: translate(-80px, 120px) scale(0.8);
+    }
+    75% {
+        transform: translate(-120px, -80px) scale(1.2);
+    }
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0.5);
+        opacity: 1;
+    }
+}
+
+/* ====== GLITCH TEXT OVERLAY ====== */
+.glitch-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    pointer-events: none;
+    text-align: center;
+}
+
+.glitch-title {
+    font-size: 8rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    position: relative;
+    display: block;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px rgba(255, 255, 255, 0.6),
+        0 0 30px rgba(255, 0, 255, 0.4),
+        0 0 40px rgba(0, 255, 255, 0.4);
+    animation: glitchAnimation 5s infinite;
+    mix-blend-mode: screen;
+}
+
+.glitch-title:nth-child(2) {
+    animation-delay: 2.5s;
+}
+
+.glitch-title::before,
+.glitch-title::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.glitch-title::before {
+    color: #00ffff;
+    animation: glitchBefore 3s infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+}
+
+.glitch-title::after {
+    color: #ff00ff;
+    animation: glitchAfter 2s infinite;
+    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+}
+
+@keyframes glitchAnimation {
+    0%, 90%, 100% {
+        transform: translate(0);
+    }
+    91% {
+        transform: translate(-5px, 5px);
+    }
+    92% {
+        transform: translate(5px, -5px);
+    }
+    93% {
+        transform: translate(-5px, -5px);
+    }
+    94% {
+        transform: translate(5px, 5px);
+    }
+}
+
+@keyframes glitchBefore {
+    0%, 95%, 100% {
+        transform: translate(0);
+    }
+    96% {
+        transform: translate(-10px, -5px);
+    }
+    97% {
+        transform: translate(10px, 5px);
+    }
+}
+
+@keyframes glitchAfter {
+    0%, 93%, 100% {
+        transform: translate(0);
+    }
+    94% {
+        transform: translate(10px, 5px);
+    }
+    95% {
+        transform: translate(-10px, -5px);
+    }
+}
+
+/* ====== CONTROLS PANEL (Always Visible) ====== */
+.controls-panel {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(15px);
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    z-index: 6;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    min-width: 250px;
+}
+
+.panel-title {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-size: 0.85rem;
+    margin: 8px 0;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background 0.2s ease;
+}
+
+.control-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.control-status {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.control-key {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-weight: bold;
+    min-width: 50px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.control-desc {
+    flex: 1;
+    opacity: 0.8;
+}
+
+/* Secret message UI removed; easter-egg features disabled */
+
+/* ====== DIMENSION COUNTER ====== */
+.dimension-counter {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
+    padding: 20px 30px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.dimension-counter span:first-child {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+}
+
+.dimension-number {
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.8),
+        0 0 20px rgba(0, 255, 255, 0.6);
+    transition: transform 0.2s ease;
+}
+
+/* ====== MODE INDICATOR ====== */
+.mode-indicator {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(15px);
+    padding: 20px 30px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    z-index: 6;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transform: translateX(calc(-100% - 30px));
+    transition: transform 0.5s ease;
+}
+
+.mode-icon {
+    font-size: 2rem;
+}
+
+.mode-text {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* Easter-egg counter removed */
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    .glitch-title {
+        font-size: 4rem;
+        letter-spacing: 0.1em;
+    }
+    
+    .controls-panel {
+        top: 10px;
+        left: 10px;
+        padding: 15px;
+        min-width: 200px;
+    }
+    
+    .panel-title {
+        font-size: 0.85rem;
+    }
+    
+    .control-item {
+        font-size: 0.75rem;
+        gap: 8px;
+    }
+    
+    .control-key {
+        min-width: 40px;
+        font-size: 0.75rem;
+        padding: 2px 6px;
+    }
+    
+    .dimension-counter,
+    .mode-indicator {
+        bottom: 15px;
+        padding: 15px 20px;
+    }
+    
+    
+    .dimension-number {
+        font-size: 2rem;
+    }
+    
+    .orb {
+        opacity: 0.6;
+    }
+    
+    /* responsive easter-egg/secret-message styles removed */
+}
+
+@media (max-width: 480px) {
+    .glitch-title {
+        font-size: 2.5rem;
+    }
+    
+    .controls-panel {
+        padding: 10px;
+        min-width: 180px;
+    }
+    
+    .panel-title {
+        font-size: 0.75rem;
+    }
+    
+    .control-item {
+        font-size: 0.65rem;
+        gap: 5px;
+    }
+    
+    .control-key {
+        min-width: 35px;
+        font-size: 0.65rem;
+    }
+    
+    .mode-indicator {
+        left: 15px;
+    }
+    
+    .mode-icon {
+        font-size: 1.5rem;
+    }
+    
+    .mode-text {
+        font-size: 0.8rem;
+    }
+}
+
+/* ====== ADDITIONAL EFFECTS ====== */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* Cursor glow effect */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.15) 0%,
+        transparent 50%
+    );
+    z-index: 2;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+/* Vignette effect */
+.orb-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* Active state enhancement */
+body:active {
+    filter: brightness(1.2);
+}
