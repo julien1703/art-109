@@ -6,24 +6,293 @@
     <title>Dreamscapes - Interactive Art</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            font-family: 'Space Mono', monospace;
+            background: #000;
+            cursor: none;
+        }
+
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.1s ease;
+        }
+
+        .floating-portal {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--portal-color) 0%, transparent 70%);
+            cursor: pointer;
+            transition: all 0.6s ease;
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 0 0 10px currentColor;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .floating-portal:nth-child(even) {
+            animation-delay: -2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .floating-portal:hover {
+            transform: scale(1.3) rotate(360deg);
+            border-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 40px var(--portal-color), inset 0 0 20px var(--portal-color);
+        }
+
+        .floating-portal.pulsing {
+            animation: portalPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes portalPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--portal-color); }
+            50% { transform: scale(1.2); box-shadow: 0 0 60px var(--portal-color); }
+        }
+
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            transition: all 2s ease;
+        }
+
+        .start-screen.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .dream-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, black 100%);
+            z-index: 60;
+            opacity: 0;
+            transition: opacity 2s ease;
+            pointer-events: none;
+        }
+
+        .dream-overlay.active {
+            opacity: 0.8;
+        }
+
+        .thought-bubble {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 70%, transparent 100%);
+            border-radius: 50%;
+            backdrop-filter: blur(20px);
+            cursor: pointer;
+            transition: all 0.8s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 0 0 20px currentColor;
+            animation: thoughtFloat 6s ease-in-out infinite;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .thought-bubble:nth-child(odd) {
+            animation-delay: -3s;
+        }
+
+        @keyframes thoughtFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .thought-bubble:hover {
+            transform: scale(1.3) !important;
+            box-shadow: 0 0 60px var(--bubble-color);
+            border-color: rgba(255,255,255,0.8);
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .progress-bar.visible {
+            opacity: 1;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #87CEEB, #4ECDC4, #FFE66D);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .dream-instruction {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            opacity: 0;
+            transition: all 1s ease;
+            z-index: 70;
+        }
+
+        .dream-instruction.visible {
+            opacity: 1;
+        }
+
+        .dream-info {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            z-index: 100;
+        }
+
+        .dream-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 48px;
+            font-weight: 900;
+            color: white;
+            text-shadow: 0 0 20px currentColor;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px currentColor; }
+            to { text-shadow: 0 0 30px currentColor, 0 0 40px currentColor; }
+        }
+
+        .dream-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 300px;
+            line-height: 1.4;
+        }
+
+        .interaction-hint {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            text-align: center;
+            z-index: 100;
+            animation: fadeInOut 6s ease-in-out infinite;
+            font-family: 'Orbitron', monospace;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0px); }
+            50% { opacity: 0.9; transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .back-button {
+            position: absolute;
+            top: 40px;
+            left: 120px;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            cursor: pointer;
+            border-radius: 30px;
+            font-family: 'Space Mono', monospace;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .back-button.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        #audio-toggle {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 24px;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #audio-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+    </style>
 </head>
 <body>
-    <!-- Custom cursor -->
     <div class="custom-cursor"></div>
-
-    <!-- Start Screen -->
-    <div class="main-title">
-        <h1 class="title">DREAMSCAPES</h1>
-        <div class="subtitle">An Interactive Journey Through Dreams</div>
-    </div>
-
-    <div class="canvas-container" id="canvas-container" style="display: none;">
-        <canvas></canvas>
-    </div>
-
-    <!-- Dream Info Panel -->
-    <div class="dream-info" id="dream-info" style="display: none;">
+    
+    <div class="dream-info">
         <div class="dream-title" id="dream-title">DREAMSCAPES</div>
         <div class="dream-description" id="dream-description">
             Choose a dream to dive into...
@@ -36,51 +305,2218 @@
     <div class="start-screen" id="start-screen">
         <div class="thought-bubble" data-dream="0" style="--bubble-color: #87CEEB; top: 15%; left: 20%; width: 140px; height: 140px;">💤<br><small>Counting<br>Sheep</small></div>
         <div class="thought-bubble" data-dream="1" style="--bubble-color: #FF6B6B; top: 60%; right: 15%; width: 160px; height: 160px;">👹<br><small>Nightmare<br>Realm</small></div>
-        <div class="thought-bubble" data-dream="2" style="--bubble-color: #4ECDC4; top: 10%; right: 25%; width: 120px; height: 120px;">🌌<br><small>Zero<br>Gravity</small></div>
-        <div class="thought-bubble" data-dream="3" style="--bubble-color: #FFE66D; bottom: 25%; left: 45%; width: 180px; height: 180px;">💭<br><small>Mind<br>Symphony</small></div>
+        <div class="thought-bubble" data-dream="2" style="--bubble-color: #4ECDC4; top: 10%; right: 25%; width: 120px; height: 120px;">🌌<br><small>Weightless<br>World</small></div>
+        <div class="thought-bubble" data-dream="3" style="--bubble-color: #FFE66D; bottom: 25%; left: 45%; width: 180px; height: 180px;">💭<br><small>Thought<br>Symphony</small></div>
         <div class="thought-bubble" data-dream="4" style="--bubble-color: #A8E6CF; top: 40%; left: 15%; width: 150px; height: 150px;">📸<br><small>Memory<br>Fragments</small></div>
     </div>
-
-    <!-- Dream Journey Overlay -->
-    <div class="dream-overlay" id="dream-overlay" style="display: none;">
-        <div class="overlay-content">
-            <h2>Deep in the Dream</h2>
-            <p>Let yourself be carried by the flow...</p>
-            
-            <!-- Progress System -->
-            <div class="progress-container" id="progress-container" style="display: none;">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
-                <div class="stage-info" id="stage-info">Beginning journey...</div>
-            </div>
-            
-            <div class="journey-controls">
-                <button id="start-journey" onclick="startDreamJourney()">Start Journey</button>
-                <div class="journey-hint">Press SPACE to start your journey</div>
-            </div>
-        </div>
+    
+    <div class="dream-overlay" id="dream-overlay"></div>
+    <div class="dream-instruction" id="dream-instruction"></div>
+    
+    <div class="progress-bar" id="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
     </div>
 
-    <!-- Instructions -->
-    <div class="instructions">
-        Move mouse • Create ripples • Discover dreams
+    <div class="interaction-hint">
+        Move Mouse • Wave Effects • Discover Dreams
     </div>
-
-    <script src="script.js"></script>
 
     <script>
-        // Initialize event listeners when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            // Audio toggle functionality
-            document.getElementById('audio-toggle').addEventListener('click', initAudio);
-            
-            // Escape key to return to start screen
-            document.addEventListener('keydown', (e) => {
-                if (e.code === 'Escape') {
-                    returnToStart();
+        // ========= AUDIO SYSTEM =========
+        let audioContext;
+        let audioEnabled = false;
+
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            audioEnabled = !audioEnabled;
+            document.getElementById('audio-toggle').textContent = audioEnabled ? '🔊' : '🔇';
+        }
+
+        function playDreamSound(dreamType, intensity = 0.3) {
+            if (!audioEnabled || !audioContext) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+
+            oscillator.connect(filter);
+            filter.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Different sounds for different dream types
+            switch(dreamType) {
+                case -1: // Startseite
+                    oscillator.frequency.value = 200 + Math.random() * 300;
+                    oscillator.type = 'triangle';
+                    break;
+                case 0: // Schäfchen
+                    oscillator.frequency.value = 220 + Math.random() * 100;
+                    oscillator.type = 'sine';
+                    break;
+                case 1: // Alptraum
+                    oscillator.frequency.value = 80 + Math.random() * 120;
+                    oscillator.type = 'sawtooth';
+                    break;
+                case 2: // Schwerelosigkeit
+                    oscillator.frequency.value = 440 + Math.random() * 220;
+                    oscillator.type = 'triangle';
+                    break;
+                case 3: // Gedanken
+                    oscillator.frequency.value = 330 + Math.random() * 440;
+                    oscillator.type = 'square';
+                    break;
+                case 4: // Erinnerungen
+                    oscillator.frequency.value = 150 + Math.random() * 200;
+                    oscillator.type = 'sine';
+                    break;
+            }
+
+            filter.type = 'lowpass';
+            filter.frequency.value = 1500 + Math.random() * 1000;
+
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(intensity, audioContext.currentTime + 0.1);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.8);
+
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.8);
+        }
+
+        // ========= MAIN VARIABLES =========
+        let currentDream = -1; // -1 für Startseite
+        let time = 0;
+        let mouseTrail = [];
+        let dreamSentences = [];
+        let isOnStartScreen = true;
+        let lastSentenceTime = 0;
+        let sentenceInterval = 3000; // 3 Sekunden
+        let startScreenParticles = [];
+        let ripples = [];
+        
+        // Journey System - now dream-specific
+        let dreamJourneyActive = false;
+        let journeyProgress = 0;
+        let journeyStage = 0;
+        let maxJourneyStages = 5;
+        let stageStartTime = 0;
+        let stageDuration = 6000; // Base duration
+        
+        // Dream-specific variables
+        let sheepCount = 0;
+        let nightmareIntensity = 0;
+        let weightlessGravity = 1;
+        let thoughtComplexity = 0;
+        let memoryClarity = 1;
+        
+        // Dream-specific collections
+        let dreamSpecificElements = [];
+        let cloudParticles = [];
+        let shadowTentacles = [];
+        let floatingWords = [];
+        let memoryPhotos = [];
+        
+        // Advanced Effects
+        let mandelbrotZoom = 1;
+        let mandelbrotOffsetX = 0;
+        let mandelbrotOffsetY = 0;
+        let musicVisualizer = [];
+        let colorPalette = [];
+        let morphingShapes = [];
+        let textParticles = [];
+        let zoomInEffect = false;
+        let dreamTransition = false;
+
+        // Dream-specific variables
+        let sheep = [];
+        let nightmareElements = [];
+        let floatingParticles = [];
+        let thoughtBubbles = [];
+        let memoryFragments = [];
+
+        // ========= DREAM TEXTS =========
+        const dreamTexts = {
+            "-1": [ // Start screen
+                "Dreams drift by...",
+                "Which path will you choose?",
+                "The night is calling...",
+                "Thoughts become reality...",
+                "A universe awaits...",
+                "Let yourself fall...",
+                "Time stands still...",
+                "Dimensions merge..."
+            ],
+            "0": [ // Sheep counting
+                "One sheep jumps over the fence...",
+                "Two sheep jump over the fence...",
+                "Three sheep jumping...",
+                "I'm losing count...",
+                "The sheep become clouds...",
+                "Gentle dreams embrace me..."
+            ],
+            "1": [ // Nightmare
+                "Shadows are chasing me...",
+                "I can't run away...",
+                "The walls are closing in...",
+                "Everything blurs before my eyes...",
+                "A cold wind...",
+                "I fall into nothingness..."
+            ],
+            "2": [ // Weightlessness
+                "I float through the air...",
+                "Gravity has no power here...",
+                "Light as a feather...",
+                "The world spins around me...",
+                "I dance among the stars...",
+                "Endless freedom..."
+            ],
+            "3": [ // Thoughts
+                "What if...",
+                "Do you still remember...",
+                "Tomorrow I will...",
+                "Thoughts like soap bubbles...",
+                "Why am I thinking about this...",
+                "The mind wanders freely..."
+            ],
+            "4": [ // Memories
+                "Once upon a time...",
+                "My childhood laughter...",
+                "Forgotten faces...",
+                "The scent of yesteryear...",
+                "How time passes...",
+                "Precious moments..."
+            ]
+        };
+
+        // ========= CLASSES =========
+        class Sheep {
+            constructor() {
+                this.reset();
+                this.x = random(-200, -50);
+            }
+
+            reset() {
+                this.x = random(-200, -50);
+                this.y = height * 0.7 + random(-50, 50);
+                this.jumpHeight = random(80, 150);
+                this.speed = random(2, 4);
+                this.jumpProgress = 0;
+                this.size = random(40, 80);
+                this.wooliness = random(0.8, 1.2);
+            }
+
+            update() {
+                this.x += this.speed;
+                this.jumpProgress += 0.08;
+                
+                if (this.x > width + 100) {
+                    this.reset();
                 }
+            }
+
+            display() {
+                push();
+                
+                // Jump arc
+                let jumpY = sin(this.jumpProgress) * this.jumpHeight;
+                translate(this.x, this.y - max(0, jumpY));
+                
+                // Body (fluffy cloud)
+                fill(255, 255, 255, 200);
+                noStroke();
+                for (let i = 0; i < 6; i++) {
+                    let angle = (i / 6) * TWO_PI;
+                    let x = cos(angle) * this.size * 0.4 * this.wooliness;
+                    let y = sin(angle) * this.size * 0.3 * this.wooliness;
+                    ellipse(x, y, this.size * 0.6);
+                }
+                
+                // Main body
+                ellipse(0, 0, this.size);
+                
+                // Head
+                fill(240, 240, 240);
+                ellipse(this.size * 0.4, -this.size * 0.2, this.size * 0.4);
+                
+                // Eyes
+                fill(0);
+                ellipse(this.size * 0.5, -this.size * 0.25, 3);
+                ellipse(this.size * 0.6, -this.size * 0.25, 3);
+                
+                // Legs
+                stroke(50);
+                strokeWeight(3);
+                line(-this.size * 0.2, this.size * 0.3, -this.size * 0.2, this.size * 0.6);
+                line(this.size * 0.2, this.size * 0.3, this.size * 0.2, this.size * 0.6);
+                
+                pop();
+            }
+        }
+
+        class DreamSentence {
+            constructor(text, dreamType) {
+                this.text = text;
+                this.x = random(100, width - 100);
+                this.y = random(100, height - 100);
+                this.size = random(16, 48);
+                this.alpha = 255;
+                this.rotation = random(-0.2, 0.2);
+                this.rotSpeed = random(-0.01, 0.01);
+                this.life = 300;
+                this.maxLife = 300;
+                this.driftX = random(-0.5, 0.5);
+                this.driftY = random(-0.5, 0.5);
+                this.dreamType = dreamType;
+            }
+
+            update() {
+                this.x += this.driftX;
+                this.y += this.driftY;
+                this.rotation += this.rotSpeed;
+                this.life--;
+                this.alpha = map(this.life, 0, this.maxLife, 0, 255);
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.driftX *= -1;
+                if (this.y < 0 || this.y > height) this.driftY *= -1;
+            }
+
+            display() {
+                push();
+                translate(this.x, this.y);
+                rotate(this.rotation);
+                
+                // Color based on dream type
+                switch(this.dreamType) {
+                    case 0: fill(135, 206, 235, this.alpha); break; // Sky blue
+                    case 1: fill(255, 100, 100, this.alpha); break; // Red
+                    case 2: fill(78, 205, 196, this.alpha); break; // Teal
+                    case 3: fill(255, 230, 109, this.alpha); break; // Yellow
+                    case 4: fill(168, 230, 207, this.alpha); break; // Green
+                }
+                
+                textAlign(CENTER, CENTER);
+                textSize(this.size);
+                textFont('Space Mono');
+                text(this.text, 0, 0);
+                pop();
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        class NightmareElement {
+            constructor() {
+                this.x = random(width);
+                this.y = random(height);
+                this.size = random(50, 200);
+                this.angle = random(TWO_PI);
+                this.speed = random(0.005, 0.02);
+                this.darkness = random(0.3, 0.8);
+                this.tentacles = [];
+                
+                for (let i = 0; i < random(3, 8); i++) {
+                    this.tentacles.push({
+                        angle: random(TWO_PI),
+                        length: random(50, 150),
+                        speed: random(0.01, 0.05)
+                    });
+                }
+            }
+
+            update() {
+                this.angle += this.speed;
+                this.x += sin(this.angle) * 0.5;
+                this.y += cos(this.angle) * 0.3;
+                
+                // Keep in bounds
+                this.x = (this.x + width) % width;
+                this.y = (this.y + height) % height;
+                
+                this.tentacles.forEach(tentacle => {
+                    tentacle.angle += tentacle.speed;
+                });
+            }
+
+            display() {
+                push();
+                translate(this.x, this.y);
+                
+                // Draw tentacles
+                this.tentacles.forEach(tentacle => {
+                    stroke(255, 0, 0, 100);
+                    strokeWeight(5);
+                    noFill();
+                    
+                    beginShape();
+                    for (let i = 0; i <= 10; i++) {
+                        let t = i / 10;
+                        let x = cos(tentacle.angle + t * PI) * tentacle.length * t;
+                        let y = sin(tentacle.angle + t * PI) * tentacle.length * t;
+                        vertex(x, y);
+                    }
+                    endShape();
+                });
+                
+                // Main shadow form
+                fill(0, 0, 0, this.darkness * 255);
+                noStroke();
+                
+                for (let i = 0; i < 5; i++) {
+                    let offset = sin(time * 2 + i) * 10;
+                    ellipse(offset, offset, this.size - i * 10);
+                }
+                
+                pop();
+            }
+        }
+
+        class FloatingParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = random(width);
+                this.y = height + 50;
+                this.z = random(50, 500);
+                this.speed = random(0.5, 2);
+                this.size = random(5, 20);
+                this.hue = random(180, 220);
+                this.brightness = random(70, 100);
+            }
+
+            update() {
+                this.y -= this.speed;
+                this.x += sin(time + this.z * 0.01) * 0.5;
+                
+                if (this.y < -50) {
+                    this.reset();
+                }
+            }
+
+            display() {
+                push();
+                colorMode(HSB);
+                
+                let alpha = map(this.z, 50, 500, 255, 50);
+                fill(this.hue, 60, this.brightness, alpha);
+                noStroke();
+                
+                let perspectiveSize = this.size * (500 / this.z);
+                ellipse(this.x, this.y, perspectiveSize);
+                
+                // Glow effect
+                fill(this.hue, 30, 100, alpha * 0.3);
+                ellipse(this.x, this.y, perspectiveSize * 2);
+                
+                colorMode(RGB);
+                pop();
+            }
+        }
+
+        class StartParticle {
+            constructor() {
+                this.x = random(width);
+                this.y = random(height);
+                this.vx = random(-1, 1);
+                this.vy = random(-1, 1);
+                this.size = random(2, 8);
+                this.hue = random(360);
+                this.life = random(200, 400);
+                this.maxLife = this.life;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life--;
+                
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            display() {
+                push();
+                colorMode(HSB);
+                let alpha = map(this.life, 0, this.maxLife, 0, 255);
+                fill(this.hue, 70, 90, alpha);
+                noStroke();
+                ellipse(this.x, this.y, this.size);
+                colorMode(RGB);
+                pop();
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        class Ripple {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 0;
+                this.maxRadius = random(100, 200);
+                this.speed = random(2, 4);
+                this.alpha = 255;
+            }
+
+            update() {
+                this.radius += this.speed;
+                this.alpha = map(this.radius, 0, this.maxRadius, 255, 0);
+            }
+
+            display() {
+                push();
+                noFill();
+                stroke(255, 255, 255, this.alpha);
+                strokeWeight(2);
+                ellipse(this.x, this.y, this.radius * 2);
+                pop();
+            }
+
+            isDead() {
+                return this.radius >= this.maxRadius;
+            }
+        }
+
+        class MorphingShape {
+            constructor() {
+                this.x = random(width);
+                this.y = random(height);
+                this.points = [];
+                this.numPoints = random(6, 12);
+                this.baseRadius = random(30, 100);
+                this.rotation = 0;
+                this.rotSpeed = random(-0.02, 0.02);
+                this.hue = random(360);
+                
+                for (let i = 0; i < this.numPoints; i++) {
+                    this.points.push({
+                        angle: (i / this.numPoints) * TWO_PI,
+                        radius: this.baseRadius + random(-20, 20),
+                        radiusSpeed: random(0.01, 0.05)
+                    });
+                }
+            }
+
+            update() {
+                this.rotation += this.rotSpeed;
+                this.points.forEach(point => {
+                    point.radius += sin(time * point.radiusSpeed + point.angle) * 2;
+                });
+            }
+
+            display() {
+                push();
+                translate(this.x, this.y);
+                rotate(this.rotation);
+                
+                colorMode(HSB);
+                fill(this.hue, 70, 80, 150);
+                stroke(this.hue, 90, 100, 200);
+                strokeWeight(2);
+                
+                beginShape();
+                this.points.forEach(point => {
+                    let x = cos(point.angle) * point.radius;
+                    let y = sin(point.angle) * point.radius;
+                    vertex(x, y);
+                });
+                endShape(CLOSE);
+                
+                colorMode(RGB);
+                pop();
+            }
+        }
+
+        class TextParticle {
+            constructor(text, x, y) {
+                this.text = text;
+                this.x = x;
+                this.y = y;
+                this.vx = random(-2, 2);
+                this.vy = random(-3, -1);
+                this.life = 255;
+                this.size = random(12, 24);
+                this.rotation = 0;
+                this.rotSpeed = random(-0.1, 0.1);
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.1; // Gravity
+                this.life -= 3;
+                this.rotation += this.rotSpeed;
+            }
+
+            display() {
+                push();
+                translate(this.x, this.y);
+                rotate(this.rotation);
+                fill(255, 255, 255, this.life);
+                textAlign(CENTER, CENTER);
+                textSize(this.size);
+                text(this.text, 0, 0);
+                pop();
+            }
+
+            isDead() {
+                return this.life <= 0;
+            }
+        }
+
+        class MusicVisual {
+            constructor() {
+                this.frequencies = [];
+                for (let i = 0; i < 64; i++) {
+                    this.frequencies.push(random(0.1, 1));
+                }
+            }
+
+            update() {
+                for (let i = 0; i < this.frequencies.length; i++) {
+                    this.frequencies[i] = lerp(this.frequencies[i], random(0.1, 1), 0.1);
+                }
+            }
+
+            display() {
+                push();
+                translate(width/2, height/2);
+                
+                for (let i = 0; i < this.frequencies.length; i++) {
+                    let angle = (i / this.frequencies.length) * TWO_PI;
+                    let radius = this.frequencies[i] * 200;
+                    
+                    colorMode(HSB);
+                    stroke((i * 5 + time * 50) % 360, 80, 90, 200);
+                    strokeWeight(4);
+                    
+                    let x1 = cos(angle) * 50;
+                    let y1 = sin(angle) * 50;
+                    let x2 = cos(angle) * (50 + radius);
+                    let y2 = sin(angle) * (50 + radius);
+                    
+                    line(x1, y1, x2, y2);
+                }
+                
+                colorMode(RGB);
+                pop();
+            }
+        }
+
+        // ========= P5.JS SETUP =========
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            
+            // Initialize sheep for counting dream
+            for (let i = 0; i < 8; i++) {
+                sheep.push(new Sheep());
+            }
+            
+            // Initialize nightmare elements
+            for (let i = 0; i < 5; i++) {
+                nightmareElements.push(new NightmareElement());
+            }
+            
+            // Initialize floating particles
+            for (let i = 0; i < 100; i++) {
+                floatingParticles.push(new FloatingParticle());
+            }
+            
+            // Initialize start screen particles
+            for (let i = 0; i < 50; i++) {
+                startScreenParticles.push(new StartParticle());
+            }
+            
+            // Initialize morphing shapes
+            for (let i = 0; i < 8; i++) {
+                morphingShapes.push(new MorphingShape());
+            }
+            
+            // Initialize music visualizer
+            musicVisualizer.push(new MusicVisual());
+            
+            // Initialize color palette
+            colorPalette = [
+                color(135, 206, 235), // Sky Blue
+                color(255, 107, 107), // Red
+                color(78, 205, 196),  // Teal
+                color(255, 230, 109), // Yellow
+                color(168, 230, 207)  // Green
+            ];
+        }
+
+        function draw() {
+            time += 0.016;
+            
+            // Update mouse trail
+            updateMouseTrail();
+            
+            // Auto-spawn sentences (less frequent during journey)
+            let currentInterval = dreamJourneyActive ? 5000 : sentenceInterval;
+            if (millis() - lastSentenceTime > currentInterval) {
+                spawnDreamSentence();
+                lastSentenceTime = millis();
+            }
+            
+            // Journey Progress Update
+            if (dreamJourneyActive) {
+                updateJourneyProgress();
+            }
+            
+            // Draw current dream or start screen
+            if (isOnStartScreen) {
+                drawStartScreen();
+            } else if (dreamJourneyActive) {
+                drawDreamJourney();
+            } else {
+                switch(currentDream) {
+                    case 0: drawSheepCountingDream(); break;
+                    case 1: drawNightmareDream(); break;
+                    case 2: drawWeightlessDream(); break;
+                    case 3: drawThoughtsDream(); break;
+                    case 4: drawMemoriesDream(); break;
+                }
+            }
+            
+            // Update and display dream sentences
+            updateDreamSentences();
+            
+            // Update text particles
+            updateTextParticles();
+            
+            // Update ripples
+            updateRipples();
+            
+            // Draw mouse trail
+            drawMouseTrail();
+        }
+
+        function updateMouseTrail() {
+            mouseTrail.push({x: mouseX, y: mouseY, time: millis()});
+            
+            // Remove old trail points
+            mouseTrail = mouseTrail.filter(point => millis() - point.time < 2000);
+        }
+
+        function drawMouseTrail() {
+            if (mouseTrail.length < 2) return;
+            
+            noFill();
+            for (let i = 1; i < mouseTrail.length; i++) {
+                let alpha = map(mouseTrail[i].time, millis() - 2000, millis(), 0, 255);
+                stroke(255, 255, 255, alpha);
+                strokeWeight(map(i, 0, mouseTrail.length, 1, 5));
+                
+                if (i > 0) {
+                    line(mouseTrail[i-1].x, mouseTrail[i-1].y, 
+                         mouseTrail[i].x, mouseTrail[i].y);
+                }
+            }
+        }
+
+        function updateDreamSentences() {
+            // Update existing sentences
+            for (let i = dreamSentences.length - 1; i >= 0; i--) {
+                dreamSentences[i].update();
+                dreamSentences[i].display();
+                
+                if (dreamSentences[i].isDead()) {
+                    dreamSentences.splice(i, 1);
+                }
+            }
+        }
+
+        function spawnDreamSentence() {
+            if (dreamSentences.length < 5) {
+                let dreamKey = isOnStartScreen ? "-1" : currentDream.toString();
+                let texts = dreamTexts[dreamKey];
+                let randomText = texts[Math.floor(Math.random() * texts.length)];
+                dreamSentences.push(new DreamSentence(randomText, isOnStartScreen ? -1 : currentDream));
+            }
+        }
+
+        function drawStartScreen() {
+            // Dynamic gradient background
+            for (let i = 0; i <= height; i++) {
+                let inter = map(i, 0, height, 0, 1);
+                let r = map(sin(time * 0.5 + inter * PI), -1, 1, 10, 40);
+                let g = map(sin(time * 0.3 + inter * PI), -1, 1, 0, 30);
+                let b = map(sin(time * 0.7 + inter * PI), -1, 1, 20, 60);
+                stroke(r, g, b);
+                line(0, i, width, i);
+            }
+            
+            // Update and display start particles
+            for (let i = startScreenParticles.length - 1; i >= 0; i--) {
+                startScreenParticles[i].update();
+                startScreenParticles[i].display();
+                
+                if (startScreenParticles[i].isDead()) {
+                    startScreenParticles.splice(i, 1);
+                    startScreenParticles.push(new StartParticle());
+                }
+            }
+            
+            // Floating orbs around mouse
+            for (let i = 0; i < 8; i++) {
+                let angle = (time * 2 + i * PI / 4) % TWO_PI;
+                let radius = 50 + sin(time * 3 + i) * 20;
+                let x = mouseX + cos(angle) * radius;
+                let y = mouseY + sin(angle) * radius;
+                
+                colorMode(HSB);
+                fill((time * 100 + i * 45) % 360, 70, 80, 150);
+                noStroke();
+                ellipse(x, y, 8 + sin(time * 4 + i) * 4);
+                colorMode(RGB);
+            }
+            
+            // Energy waves from center
+            push();
+            translate(width/2, height/2);
+            noFill();
+            
+            for (let i = 0; i < 5; i++) {
+                let radius = (time * 100 + i * 50) % 300;
+                let alpha = map(radius, 0, 300, 255, 0);
+                stroke(255, 255, 255, alpha);
+                strokeWeight(2);
+                ellipse(0, 0, radius * 2);
+            }
+            pop();
+        }
+        
+        function updateRipples() {
+            for (let i = ripples.length - 1; i >= 0; i--) {
+                ripples[i].update();
+                ripples[i].display();
+                
+                if (ripples[i].isDead()) {
+                    ripples.splice(i, 1);
+                }
+            }
+        }
+        
+        function updateTextParticles() {
+            for (let i = textParticles.length - 1; i >= 0; i--) {
+                textParticles[i].update();
+                textParticles[i].display();
+                
+                if (textParticles[i].isDead()) {
+                    textParticles.splice(i, 1);
+                }
+            }
+        }
+        
+        function updateJourneyProgress() {
+            let elapsed = millis() - stageStartTime;
+            journeyProgress = elapsed / stageDuration;
+            
+            // Update progress bar
+            let totalProgress = (journeyStage + journeyProgress) / maxJourneyStages;
+            document.getElementById('progress-fill').style.width = (totalProgress * 100) + '%';
+            
+            if (journeyProgress >= 1) {
+                journeyStage++;
+                stageStartTime = millis();
+                journeyProgress = 0;
+                
+                if (journeyStage >= maxJourneyStages) {
+                    endDreamJourney();
+                }
+            }
+        }
+        
+        function drawDreamJourney() {
+            // Each dream has completely different journey structure
+            switch(currentDream) {
+                case 0: drawSheepDreamJourney(); break;
+                case 1: drawNightmareJourney(); break; 
+                case 2: drawWeightlessJourney(); break;
+                case 3: drawThoughtsJourney(); break;
+                case 4: drawMemoryJourney(); break;
+            }
+        }
+        
+        // ========= SHEEP COUNTING DREAM =========
+        function drawSheepDreamJourney() {
+            switch(journeyStage) {
+                case 0: sheepDream_FallingAsleep(); break;
+                case 1: sheepDream_CountingBegins(); break;
+                case 2: sheepDream_LosingCount(); break;
+                case 3: sheepDream_BecomingClouds(); break;
+                case 4: sheepDream_DeepSleep(); break;
+            }
+        }
+        
+        function sheepDream_FallingAsleep() {
+            // Eyelids closing effect
+            background(25, 25, 112);
+            
+            // Eyelid simulation
+            let eyelidHeight = map(journeyProgress, 0, 1, 0, height/2);
+            fill(0, 0, 0);
+            rect(0, 0, width, eyelidHeight);
+            rect(0, height - eyelidHeight, width, eyelidHeight);
+            
+            // Blinking stars
+            for (let i = 0; i < 50; i++) {
+                let x = (i * 137) % width;
+                let y = ((i * 73) % (height - eyelidHeight * 2)) + eyelidHeight;
+                let brightness = sin(time * 2 + i) * 127 + 128;
+                fill(255, 255, 255, brightness);
+                ellipse(x, y, 2);
+            }
+            
+            showInstruction("Your eyelids grow heavy... You drift into sleep...");
+        }
+        
+        function sheepDream_CountingBegins() {
+            background(135, 206, 250, 100);
+            
+            // Draw fence
+            stroke(139, 69, 19);
+            strokeWeight(8);
+            line(0, height * 0.7, width, height * 0.7);
+            
+            // Spawn sheep periodically
+            if (frameCount % 60 === 0) {
+                sheepCount++;
+            }
+            
+            // Display sheep number
+            fill(255);
+            textAlign(CENTER);
+            textSize(48);
+            text(sheepCount + " Sheep", width/2, 100);
+            
+            // Animated sheep jumping
+            for (let i = 0; i < sheepCount && i < 10; i++) {
+                let x = (i * 80 + (frameCount * 2)) % (width + 200) - 100;
+                let jumpY = sin((x + i * 50) * 0.02) * 80;
+                
+                push();
+                translate(x, height * 0.7 - max(0, jumpY));
+                drawAnimatedSheep();
+                pop();
+            }
+            
+            showInstruction("One sheep, two sheep... count along...");
+        }
+        
+        function sheepDream_LosingCount() {
+            background(100, 150, 200);
+            
+            // Numbers floating and getting confused
+            let numbers = ["1", "2", "?", "5", "?", "10", "??"];
+            for (let i = 0; i < numbers.length; i++) {
+                let x = noise(i, time * 0.5) * width;
+                let y = noise(i + 100, time * 0.3) * height;
+                let rotation = sin(time + i) * 0.3;
+                
+                push();
+                translate(x, y);
+                rotate(rotation);
+                fill(255, 255, 255, 200);
+                textSize(32 + sin(time * 2 + i) * 10);
+                textAlign(CENTER);
+                text(numbers[i], 0, 0);
+                pop();
+            }
+            
+            // Sheep becoming blurry
+            for (let i = 0; i < 8; i++) {
+                let x = random(width);
+                let y = random(height * 0.5, height * 0.9);
+                let blur = map(journeyProgress, 0, 1, 255, 50);
+                
+                fill(255, 255, 255, blur);
+                ellipse(x, y, 40 + random(-10, 10));
+            }
+            
+            showInstruction("Wait... how many were there? I'm losing track...");
+        }
+        
+        function sheepDream_BecomingClouds() {
+            background(220, 240, 255);
+            
+            // Sheep morph into clouds
+            for (let i = 0; i < 15; i++) {
+                let x = noise(i * 0.1, time * 0.05) * width;
+                let y = noise(i * 0.1 + 50, time * 0.03) * height * 0.6;
+                
+                // Cloud-like sheep
+                fill(255, 255, 255, 180);
+                noStroke();
+                
+                for (let j = 0; j < 8; j++) {
+                    let cloudX = x + cos(j) * 25;
+                    let cloudY = y + sin(j) * 15;
+                    let size = 30 + sin(time + i + j) * 10;
+                    ellipse(cloudX, cloudY, size);
+                }
+            }
+            
+            showInstruction("The sheep become clouds... so soft and peaceful...");
+        }
+        
+        function sheepDream_DeepSleep() {
+            // Fade to peaceful darkness
+            let fadeAlpha = map(journeyProgress, 0, 1, 0, 255);
+            background(25, 25, 112, fadeAlpha);
+            
+            // Gentle breathing pattern
+            let breathe = sin(time * 2) * 20;
+            push();
+            translate(width/2, height/2);
+            scale(1 + breathe * 0.01);
+            
+            fill(255, 255, 255, 50 - fadeAlpha * 0.2);
+            textAlign(CENTER);
+            textSize(24);
+            text("Zzz...", 0, 0);
+            
+            pop();
+            
+            showInstruction("Deep sleep... Peace... Rest...");
+        }
+        
+        // ========= NIGHTMARE DREAM =========
+        function drawNightmareJourney() {
+            switch(journeyStage) {
+                case 0: nightmare_UneasyFeeling(); break;
+                case 1: nightmare_ShadowsAppear(); break;
+                case 2: nightmare_ChasingDarkness(); break;
+                case 3: nightmare_Trapped(); break;
+                case 4: nightmare_WakeUp(); break;
+            }
+        }
+        
+        function nightmare_UneasyFeeling() {
+            let unease = map(journeyProgress, 0, 1, 0, 50);
+            background(unease, 0, unease);
+            
+            // Subtle wrong movements
+            for (let i = 0; i < 20; i++) {
+                let x = noise(i * 0.1, time * 0.1 + unease * 0.01) * width;
+                let y = noise(i * 0.1 + 100, time * 0.1) * height;
+                
+                fill(100, 0, 0, 100);
+                ellipse(x, y, 10 + sin(time * 3 + i) * 5);
+            }
+            
+            showInstruction("Something's not right... An uneasy feeling creeps over you...");
+        }
+        
+        function nightmare_ShadowsAppear() {
+            background(20, 0, 20);
+            
+            nightmareIntensity = map(journeyProgress, 0, 1, 0, 1);
+            
+            // Growing shadows from edges
+            for (let i = 0; i < 8; i++) {
+                let shadowSize = nightmareIntensity * 200;
+                let x = (i % 4) * width/3;
+                let y = floor(i / 4) * height;
+                
+                fill(0, 0, 0, nightmareIntensity * 150);
+                push();
+                translate(x, y);
+                rotate(sin(time + i) * 0.2);
+                
+                beginShape();
+                for (let a = 0; a < TWO_PI; a += 0.2) {
+                    let r = shadowSize * (1 + sin(a * 5 + time) * 0.3);
+                    vertex(cos(a) * r, sin(a) * r);
+                }
+                endShape(CLOSE);
+                pop();
+            }
+            
+            showInstruction("Shadows crawl from the corners... They're getting bigger...");
+        }
+        
+        function nightmare_ChasingDarkness() {
+            background(10, 0, 0);
+            
+            // Chasing effect - darkness follows mouse
+            let chaseX = lerp(mouseX, width/2, 0.05);
+            let chaseY = lerp(mouseY, height/2, 0.05);
+            
+            for (let i = 0; i < 30; i++) {
+                let angle = (i / 30) * TWO_PI;
+                let radius = 50 + i * 20;
+                let x = chaseX + cos(angle + time) * radius;
+                let y = chaseY + sin(angle + time) * radius;
+                
+                fill(50 + i * 2, 0, 0, 200 - i * 5);
+                ellipse(x, y, 20 - i * 0.5);
+            }
+            
+            // Flickering red light
+            if (random(1) < 0.3) {
+                fill(255, 0, 0, 100);
+                rect(0, 0, width, height);
+            }
+            
+            showInstruction("RUN! The darkness is chasing you! Move your mouse!");
+        }
+        
+        function nightmare_Trapped() {
+            background(0);
+            
+            // Shrinking safe zone
+            let safeRadius = map(journeyProgress, 0, 1, 300, 50);
+            
+            // Draw shrinking light circle
+            push();
+            translate(width/2, height/2);
+            
+            fill(255, 255, 200, 100);
+            ellipse(0, 0, safeRadius * 2);
+            
+            // Menacing eyes in the darkness
+            for (let i = 0; i < 20; i++) {
+                let angle = random(TWO_PI);
+                let distance = safeRadius + random(50, 200);
+                let x = cos(angle) * distance;
+                let y = sin(angle) * distance;
+                
+                fill(255, 0, 0, random(100, 255));
+                ellipse(x - 5, y, 8, 4);
+                ellipse(x + 5, y, 8, 4);
+            }
+            
+            pop();
+            
+            showInstruction("Trapped... The light grows weaker... They're getting closer...");
+        }
+        
+        function nightmare_WakeUp() {
+            // Sudden flash to white then fade
+            if (journeyProgress < 0.3) {
+                background(255);
+            } else {
+                let fade = map(journeyProgress, 0.3, 1, 255, 0);
+                background(fade);
+            }
+            
+            // Heart beating effect
+            let heartbeat = sin(time * 10) > 0.7 ? 30 : 0;
+            fill(255, 0, 0, heartbeat);
+            rect(0, 0, width, height);
+            
+            showInstruction("WAKE UP! You jolt awake... Just a dream... or was it?");
+        }
+        
+        function drawJourneyStage_Entrance() {
+            // Tunnel effect - being pulled into the dream
+            background(0);
+            
+            push();
+            translate(width/2, height/2);
+            
+            let tunnelDepth = map(journeyProgress, 0, 1, 500, 50);
+            
+            for (let i = 0; i < 20; i++) {
+                let radius = (i * tunnelDepth) + (sin(time * 5) * 20);
+                let alpha = map(i, 0, 20, 255, 0);
+                
+                let dreamColor = colorPalette[currentDream];
+                fill(red(dreamColor), green(dreamColor), blue(dreamColor), alpha);
+                noStroke();
+                ellipse(0, 0, radius);
+            }
+            
+            // Spiral particles
+            for (let i = 0; i < 50; i++) {
+                let angle = (i * 0.5) + (time * 3);
+                let radius = (i * 5) + (sin(time * 2 + i) * 20);
+                let x = cos(angle) * radius;
+                let y = sin(angle) * radius;
+                
+                fill(255, 255, 255, 200);
+                ellipse(x, y, 3);
+            }
+            
+            pop();
+            
+            showInstruction("Du wirst in den Traum hineingezogen...");
+        }
+        
+        function drawJourneyStage_Exploration() {
+            // Particle universe based on dream type
+            let bgColor = colorPalette[currentDream];
+            background(red(bgColor) * 0.1, green(bgColor) * 0.1, blue(bgColor) * 0.1);
+            
+            // Morphing shapes
+            morphingShapes.forEach(shape => {
+                shape.update();
+                shape.display();
             });
+            
+            // Interactive particle field
+            for (let i = 0; i < 100; i++) {
+                let x = noise(i * 0.01, time * 0.1) * width;
+                let y = noise(i * 0.01 + 100, time * 0.1) * height;
+                
+                let distance = dist(mouseX, mouseY, x, y);
+                let influence = map(distance, 0, 200, 5, 0);
+                
+                x += (mouseX - x) * 0.001 * influence;
+                y += (mouseY - y) * 0.001 * influence;
+                
+                let dreamColor = colorPalette[currentDream];
+                fill(red(dreamColor), green(dreamColor), blue(dreamColor), 150);
+                noStroke();
+                ellipse(x, y, 3 + influence);
+            }
+            
+            showInstruction("Bewege die Maus um die Traumwelt zu formen...");
+        }
+        
+        function drawJourneyStage_Interaction() {
+            // Music visualization stage
+            background(10, 5, 20);
+            
+            musicVisualizer[0].update();
+            musicVisualizer[0].display();
+            
+            // Mandelbrot-inspired fractal zoom
+            drawSimpleFractal();
+            
+            // Text explosion on click
+            if (mouseIsPressed && frameCount % 5 === 0) {
+                let words = ["Music", "Harmony", "Vibration", "Resonance", "Echo"];
+                let word = words[Math.floor(Math.random() * words.length)];
+                textParticles.push(new TextParticle(word, mouseX, mouseY));
+            }
+            
+            showInstruction("Click and hold for music visualization...");
+        }
+        
+        function drawJourneyStage_Climax() {
+            // Intense visual experience
+            background(0);
+            
+            // Pulsating energy waves
+            push();
+            translate(width/2, height/2);
+            
+            for (let i = 0; i < 10; i++) {
+                let radius = (sin(time * 4 + i) + 1) * 200;
+                let alpha = map(sin(time * 4 + i), -1, 1, 50, 200);
+                
+                colorMode(HSB);
+                stroke((time * 100 + i * 30) % 360, 80, 100, alpha);
+                strokeWeight(5);
+                noFill();
+                ellipse(0, 0, radius);
+            }
+            
+            colorMode(RGB);
+            pop();
+            
+            // Chaos particles
+            for (let i = 0; i < 200; i++) {
+                let x = mouseX + random(-100, 100);
+                let y = mouseY + random(-100, 100);
+                let size = random(2, 8);
+                
+                fill(random(255), random(255), random(255), 150);
+                noStroke();
+                ellipse(x, y, size);
+            }
+            
+            showInstruction("The dream reaches its climax...");
+        }
+        
+        function drawJourneyStage_Resolution() {
+            // Peaceful fade out
+            let fadeAlpha = map(journeyProgress, 0, 1, 0, 255);
+            
+            // Keep previous stage visible
+            drawJourneyStage_Climax();
+            
+            // Overlay white fade
+            fill(255, 255, 255, fadeAlpha);
+            noStroke();
+            rect(0, 0, width, height);
+            
+            showInstruction("The dream dissolves away...");
+        }
+        
+        function drawAnimatedSheep() {
+            // Animated sheep for counting dream
+            let breathe = sin(frameCount * 0.1) * 0.1 + 1;
+            scale(breathe);
+            
+            // Body
+            fill(255, 255, 255, 220);
+            noStroke();
+            ellipse(0, 0, 40, 30);
+            
+            // Wool puffs
+            for (let i = 0; i < 6; i++) {
+                let angle = i * PI/3;
+                let x = cos(angle) * 15;
+                let y = sin(angle) * 10;
+                ellipse(x, y, 15 + sin(frameCount * 0.2 + i) * 3);
+            }
+            
+            // Head
+            fill(240, 240, 240);
+            ellipse(20, -5, 15, 12);
+            
+            // Eyes
+            fill(0);
+            ellipse(25, -7, 2);
+            ellipse(25, -3, 2);
+            
+            // Legs
+            stroke(100);
+            strokeWeight(2);
+            line(-5, 12, -5, 25);
+            line(5, 12, 5, 25);
+        }
+        
+        function drawSimpleFractal() {
+            push();
+            translate(width/2, height/2);
+            
+            let zoom = 1 + sin(time) * 0.5;
+            scale(zoom);
+            
+            for (let i = 0; i < 5; i++) {
+                push();
+                rotate(time * 0.5 + i * PI/3);
+                
+                colorMode(HSB);
+                stroke((time * 50 + i * 60) % 360, 70, 90, 100);
+                strokeWeight(2);
+                noFill();
+                
+                beginShape();
+                for (let angle = 0; angle < TWO_PI; angle += 0.1) {
+                    let r = 50 + sin(angle * 5 + time * 2) * 20;
+                    let x = cos(angle) * r;
+                    let y = sin(angle) * r;
+                    vertex(x, y);
+                }
+                endShape(CLOSE);
+                
+                pop();
+            }
+            
+            colorMode(RGB);
+            pop();
+        }
+        
+        function showInstruction(text) {
+            document.getElementById('dream-instruction').textContent = text;
+            document.getElementById('dream-instruction').classList.add('visible');
+        }
+        
+        function hideInstruction() {
+            document.getElementById('dream-instruction').classList.remove('visible');
+        }
+
+        // ========= WEIGHTLESS DREAM =========
+        function drawWeightlessJourney() {
+            switch(journeyStage) {
+                case 0: weightless_LiftOff(); break;
+                case 1: weightless_FloatingObjects(); break;
+                case 2: weightless_GravityPlay(); break;
+                case 3: weightless_CosmicDance(); break;
+                case 4: weightless_ReturnToEarth(); break;
+            }
+        }
+        
+        function weightless_LiftOff() {
+            background(0, 0, 50);
+            
+            // Rising effect
+            let liftForce = map(journeyProgress, 0, 1, height, height * 0.3);
+            
+            push();
+            translate(0, liftForce - height);
+            
+            // Ground falling away
+            fill(50, 100, 50);
+            rect(0, height * 0.8, width, height * 0.2);
+            
+            // Buildings shrinking
+            for (let i = 0; i < 10; i++) {
+                let buildingHeight = random(50, 200);
+                fill(100, 100, 100);
+                rect(i * (width/10), height * 0.8 - buildingHeight, width/10 - 5, buildingHeight);
+            }
+            
+            pop();
+            
+            // Stars appearing
+            for (let i = 0; i < 100; i++) {
+                let starAlpha = map(journeyProgress, 0, 1, 0, 255);
+                fill(255, 255, 255, starAlpha);
+                let x = (i * 137) % width;
+                let y = (i * 73) % height;
+                ellipse(x, y, 2);
+            }
+            
+            showInstruction("You feel gravity letting go... You're lifting off...");
+        }
+        
+        function weightless_FloatingObjects() {
+            background(0, 20, 60);
+            
+            // Floating everyday objects
+            let objects = ["☕", "📚", "🪑", "🕰️", "🎈", "🍎", "✏️", "💡"];
+            
+            for (let i = 0; i < objects.length; i++) {
+                let x = noise(i, time * 0.1) * width;
+                let y = noise(i + 100, time * 0.08) * height;
+                let rotation = sin(time + i) * 0.5;
+                let floatY = sin(time * 2 + i) * 30;
+                
+                push();
+                translate(x, y + floatY);
+                rotate(rotation);
+                textSize(40);
+                text(objects[i], 0, 0);
+                pop();
+            }
+            
+            showInstruction("Everyday objects float around you...");
+        }
+        
+        function weightless_GravityPlay() {
+            background(20, 0, 80);
+            
+            // Interactive gravity wells
+            let wells = [];
+            wells.push({x: mouseX, y: mouseY, strength: 2});
+            wells.push({x: width * 0.2, y: height * 0.3, strength: 1});
+            wells.push({x: width * 0.8, y: height * 0.7, strength: 1.5});
+            
+            // Particles affected by gravity wells
+            for (let i = 0; i < 200; i++) {
+                let x = (noise(i * 0.01, time * 0.1) * width * 2) % width;
+                let y = (noise(i * 0.01 + 100, time * 0.1) * height * 2) % height;
+                
+                // Calculate gravity influence
+                wells.forEach(well => {
+                    let d = dist(x, y, well.x, well.y);
+                    if (d < 100) {
+                        let force = (100 - d) * well.strength * 0.01;
+                        x = lerp(x, well.x, force);
+                        y = lerp(y, well.y, force);
+                    }
+                });
+                
+                colorMode(HSB);
+                fill((i + time * 50) % 360, 70, 90, 150);
+                ellipse(x, y, 4);
+                colorMode(RGB);
+            }
+            
+            // Draw gravity wells
+            wells.forEach(well => {
+                noFill();
+                stroke(255, 255, 255, 100);
+                strokeWeight(2);
+                ellipse(well.x, well.y, 100);
+            });
+            
+            showInstruction("Move your mouse to create gravitational fields...");
+        }
+        
+        function weightless_CosmicDance() {
+            background(0, 0, 20);
+            
+            // Orbital dance of planets
+            push();
+            translate(width/2, height/2);
+            
+            for (let i = 0; i < 6; i++) {
+                let orbitRadius = 80 + i * 40;
+                let angle = time * (0.5 + i * 0.1) + i * PI/3;
+                let x = cos(angle) * orbitRadius;
+                let y = sin(angle) * orbitRadius;
+                
+                // Planet trail
+                for (let j = 0; j < 20; j++) {
+                    let trailAngle = angle - j * 0.1;
+                    let trailX = cos(trailAngle) * orbitRadius;
+                    let trailY = sin(trailAngle) * orbitRadius;
+                    let alpha = map(j, 0, 20, 100, 0);
+                    
+                    colorMode(HSB);
+                    fill((i * 60 + time * 20) % 360, 70, 80, alpha);
+                    ellipse(trailX, trailY, 8 - j * 0.3);
+                }
+                
+                // Planet
+                colorMode(HSB);
+                fill((i * 60) % 360, 80, 90);
+                ellipse(x, y, 15 + sin(time * 3 + i) * 3);
+                colorMode(RGB);
+            }
+            
+            pop();
+            
+            showInstruction("You dance in the cosmic ballet of planets...");
+        }
+        
+        function weightless_ReturnToEarth() {
+            // Falling back effect
+            let fallSpeed = map(journeyProgress, 0, 1, 0, 20);
+            
+            background(135, 206, 250);
+            
+            // Clouds rushing past
+            for (let i = 0; i < 10; i++) {
+                let y = (height + time * fallSpeed * 10 + i * 100) % (height + 200) - 100;
+                
+                fill(255, 255, 255, 200);
+                for (let j = 0; j < 5; j++) {
+                    ellipse(i * 80 + j * 20, y, 30 + j * 10);
+                }
+            }
+            
+            // Ground approaching
+            let groundY = map(journeyProgress, 0, 1, height + 200, height * 0.8);
+            fill(100, 200, 100);
+            rect(0, groundY, width, height - groundY + 200);
+            
+            showInstruction("Gravity returns... You sink back to earth...");
+        }
+        
+        // ========= THOUGHTS DREAM =========
+        function drawThoughtsJourney() {
+            switch(journeyStage) {
+                case 0: thoughts_MindOpening(); break;
+                case 1: thoughts_WordFlow(); break;
+                case 2: thoughts_IdeasColliding(); break;
+                case 3: thoughts_ConsciousnessExpansion(); break;
+                case 4: thoughts_MindQuiet(); break;
+            }
+        }
+        
+        function thoughts_MindOpening() {
+            background(50, 0, 100);
+            
+            // Brain-like neural network
+            let neurons = [];
+            for (let i = 0; i < 50; i++) {
+                neurons.push({
+                    x: random(width),
+                    y: random(height),
+                    connections: []
+                });
+            }
+            
+            // Draw connections
+            stroke(255, 255, 100, 100);
+            strokeWeight(1);
+            
+            for (let i = 0; i < neurons.length; i++) {
+                for (let j = i + 1; j < neurons.length; j++) {
+                    let d = dist(neurons[i].x, neurons[i].y, neurons[j].x, neurons[j].y);
+                    if (d < 100) {
+                        let alpha = map(d, 0, 100, 200, 0);
+                        stroke(255, 255, 100, alpha * journeyProgress);
+                        line(neurons[i].x, neurons[i].y, neurons[j].x, neurons[j].y);
+                    }
+                }
+            }
+            
+            // Draw neurons
+            fill(255, 255, 150);
+            noStroke();
+            for (let neuron of neurons) {
+                ellipse(neuron.x, neuron.y, 5 + sin(time * 2 + neuron.x) * 2);
+            }
+            
+            showInstruction("Your mind opens... Thoughts begin to flow...");
+        }
+        
+        function thoughts_WordFlow() {
+            background(30, 0, 60);
+            
+            // Flowing words
+            let words = ["Love", "Dreams", "Hope", "Fear", "Joy", "Time", "Space", "Being", "Nothing", "Everything"];
+            
+            for (let i = 0; i < words.length; i++) {
+                let x = (noise(i, time * 0.1) * width * 2) % width;
+                let y = (noise(i + 50, time * 0.08) * height * 2) % height;
+                let size = 16 + sin(time + i) * 8;
+                let alpha = sin(time * 2 + i * 0.5) * 127 + 128;
+                
+                fill(255, 255, 255, alpha);
+                textSize(size);
+                textAlign(CENTER);
+                text(words[i], x, y);
+            }
+            
+            showInstruction("Words flow through your consciousness like a stream...");
+        }
+        
+        function thoughts_IdeasColliding() {
+            background(20, 0, 40);
+            
+            // Ideas as colliding particles
+            let ideas = ["💡", "🧠", "⚡", "🌟", "💫", "🎨", "🔬", "📐"];
+            
+            for (let i = 0; i < ideas.length; i++) {
+                let centerX = width/2;
+                let centerY = height/2;
+                
+                let angle1 = time + i * PI/4;
+                let angle2 = time * 1.5 + i * PI/4 + PI;
+                
+                let x1 = centerX + cos(angle1) * 150;
+                let y1 = centerY + sin(angle1) * 150;
+                let x2 = centerX + cos(angle2) * 150;
+                let y2 = centerY + sin(angle2) * 150;
+                
+                // Collision effect
+                let d = dist(x1, y1, x2, y2);
+                if (d < 50) {
+                    // Spark effect
+                    for (let j = 0; j < 10; j++) {
+                        let sparkX = lerp(x1, x2, 0.5) + random(-30, 30);
+                        let sparkY = lerp(y1, y2, 0.5) + random(-30, 30);
+                        fill(255, 255, 0, random(100, 255));
+                        ellipse(sparkX, sparkY, random(2, 8));
+                    }
+                }
+                
+                textSize(30);
+                text(ideas[i], x1, y1);
+                if (i + 4 < ideas.length) {
+                    text(ideas[i + 4], x2, y2);
+                }
+            }
+            
+            showInstruction("Ideas collide and generate new insights!");
+        }
+        
+        function thoughts_ConsciousnessExpansion() {
+            background(0);
+            
+            // Expanding consciousness mandala
+            push();
+            translate(width/2, height/2);
+            
+            let layers = 8;
+            for (let layer = 0; layer < layers; layer++) {
+                let radius = layer * 30 + sin(time + layer) * 20;
+                let segments = 6 + layer * 2;
+                
+                for (let i = 0; i < segments; i++) {
+                    let angle = (i / segments) * TWO_PI + time * (layer % 2 === 0 ? 1 : -1);
+                    let x = cos(angle) * radius;
+                    let y = sin(angle) * radius;
+                    
+                    colorMode(HSB);
+                    fill((layer * 45 + time * 50) % 360, 70, 90, 150);
+                    noStroke();
+                    
+                    push();
+                    translate(x, y);
+                    rotate(angle + time);
+                    rect(-5, -15, 10, 30);
+                    pop();
+                }
+            }
+            
+            colorMode(RGB);
+            pop();
+            
+            showInstruction("Your consciousness expands into infinity...");
+        }
+        
+        function thoughts_MindQuiet() {
+            let quietness = map(journeyProgress, 0, 1, 255, 20);
+            background(quietness, quietness, quietness + 50);
+            
+            // Single peaceful thought
+            fill(255, 255, 255, 100);
+            textAlign(CENTER, CENTER);
+            textSize(24 + sin(time) * 4);
+            text("Silence...", width/2, height/2);
+            
+            // Gentle ripples of calm
+            noFill();
+            stroke(255, 255, 255, 50);
+            strokeWeight(1);
+            
+            for (let i = 1; i < 6; i++) {
+                let radius = i * 100 + sin(time + i) * 20;
+                ellipse(width/2, height/2, radius);
+            }
+            
+            showInstruction("Peace returns to your mind... Quiet...");
+        }
+        
+        // ========= DREAM FUNCTIONS =========
+        function drawSheepCountingDream() {
+            // Gradient sky background
+            for (let i = 0; i <= height; i++) {
+                let inter = map(i, 0, height, 0, 1);
+                let c = lerpColor(color(25, 25, 112), color(0, 0, 0), inter);
+                stroke(c);
+                line(0, i, width, i);
+            }
+            
+            // Stars
+            for (let i = 0; i < 150; i++) {
+                let x = (noise(i * 0.1, time * 0.05) * width * 2) % width;
+                let y = (i * 73) % (height * 0.6);
+                let brightness = noise(i * 0.1, time * 0.1) * 255;
+                fill(255, 255, 255, brightness);
+                noStroke();
+                ellipse(x, y, random(1, 3));
+            }
+            
+            // Fence
+            stroke(139, 69, 19);
+            strokeWeight(8);
+            let fenceY = height * 0.75;
+            line(0, fenceY, width, fenceY);
+            
+            // Fence posts
+            for (let x = 100; x < width; x += 150) {
+                line(x, fenceY - 50, x, fenceY + 20);
+            }
+            
+            // Update and display sheep
+            sheep.forEach(sheepObj => {
+                sheepObj.update();
+                sheepObj.display();
+            });
+            
+            // Moon
+            fill(255, 255, 224, 200);
+            noStroke();
+            ellipse(width * 0.8, height * 0.2, 120);
+        }
+
+        function drawNightmareDream() {
+            // Dark, shifting background
+            let bgR = 20 + sin(time * 2) * 10;
+            let bgG = 0;
+            let bgB = 20 + sin(time * 1.5) * 10;
+            background(bgR, bgG, bgB);
+            
+            // Nightmare elements
+            nightmareElements.forEach(element => {
+                element.update();
+                element.display();
+            });
+            
+            // Flickering effect
+            if (random(1) < 0.1) {
+                fill(255, 0, 0, 30);
+                noStroke();
+                rect(0, 0, width, height);
+            }
+            
+            // Creepy fog effect
+            for (let i = 0; i < 20; i++) {
+                let x = noise(i * 0.1, time * 0.05) * width;
+                let y = height * 0.8 + sin(time + i) * 50;
+                fill(50, 50, 50, 100);
+                noStroke();
+                ellipse(x, y, 200, 50);
+            }
+        }
+
+        function drawWeightlessDream() {
+            // Cosmic gradient background
+            for (let i = 0; i <= height; i++) {
+                let inter = map(i, 0, height, 0, 1);
+                let c = lerpColor(color(0, 0, 50), color(0, 50, 100), inter);
+                stroke(c);
+                line(0, i, width, i);
+            }
+            
+            // Floating particles
+            floatingParticles.forEach(particle => {
+                particle.update();
+                particle.display();
+            });
+            
+            // Gravity wells (mouse interaction)
+            if (mouseIsPressed) {
+                push();
+                translate(mouseX, mouseY);
+                
+                for (let r = 5; r < 200; r += 20) {
+                    noFill();
+                    stroke(78, 205, 196, map(r, 5, 200, 200, 20));
+                    strokeWeight(2);
+                    ellipse(0, 0, r);
+                }
+                pop();
+            }
+        }
+
+        function drawThoughtsDream() {
+            // Soft gradient
+            for (let i = 0; i <= height; i++) {
+                let inter = map(i, 0, height, 0, 1);
+                let c = lerpColor(color(255, 230, 109, 50), color(255, 255, 255, 10), inter);
+                stroke(c);
+                line(0, i, width, i);
+            }
+            
+            // Thought bubbles
+            for (let i = 0; i < 15; i++) {
+                let x = noise(i * 0.1, time * 0.02) * width;
+                let y = noise(i * 0.1 + 100, time * 0.03) * height;
+                let size = 50 + sin(time + i) * 30;
+                
+                fill(255, 255, 255, 100);
+                stroke(255, 230, 109, 150);
+                strokeWeight(2);
+                ellipse(x, y, size);
+                
+                // Smaller bubbles
+                for (let j = 0; j < 3; j++) {
+                    let bubbleX = x + cos(time * 2 + j) * size * 0.3;
+                    let bubbleY = y + sin(time * 2 + j) * size * 0.3;
+                    ellipse(bubbleX, bubbleY, size * 0.3);
+                }
+            }
+        }
+
+        // ========= MEMORY DREAM =========
+        function drawMemoryJourney() {
+            switch(journeyStage) {
+                case 0: memory_TimeRewind(); break;
+                case 1: memory_ChildhoodFlash(); break;
+                case 2: memory_PhotoAlbum(); break;
+                case 3: memory_FadingMoments(); break;
+                case 4: memory_PresentReturn(); break;
+            }
+        }
+        
+        function memory_TimeRewind() {
+            background(139, 125, 107);
+            
+            // Clock rewinding effect
+            push();
+            translate(width/2, height/2);
+            
+            // Clock face
+            stroke(101, 67, 33);
+            strokeWeight(8);
+            noFill();
+            ellipse(0, 0, 200);
+            
+            // Clock hands spinning backwards
+            let rewindSpeed = map(journeyProgress, 0, 1, 1, 10);
+            strokeWeight(4);
+            
+            // Hour hand
+            push();
+            rotate(-time * rewindSpeed);
+            line(0, 0, 0, -60);
+            pop();
+            
+            // Minute hand
+            push();
+            rotate(-time * rewindSpeed * 12);
+            line(0, 0, 0, -80);
+            pop();
+            
+            pop();
+            
+            // Time particles flying backwards
+            for (let i = 0; i < 30; i++) {
+                let x = width - (time * 100 + i * 50) % (width + 100);
+                let y = height * 0.3 + sin(time + i) * 50;
+                
+                fill(160, 140, 120, 200);
+                textSize(16);
+                text((2020 - i) + "", x, y);
+            }
+            
+            showInstruction("Time rewinds... Memories awaken...");
+        }
+        
+        function memory_ChildhoodFlash() {
+            background(255, 230, 200);
+            
+            // Childhood toys floating
+            let toys = ["🧸", "🚂", "🎈", "🪀", "🎨", "📚", "⚽", "🎪"];
+            
+            for (let i = 0; i < toys.length; i++) {
+                let x = sin(time + i) * 200 + width/2;
+                let y = cos(time * 1.2 + i) * 150 + height/2;
+                let size = 30 + sin(time * 2 + i) * 10;
+                
+                // Glow effect
+                push();
+                drawingContext.shadowColor = 'rgba(255, 200, 100, 0.8)';
+                drawingContext.shadowBlur = 20;
+                textSize(size);
+                text(toys[i], x, y);
+                drawingContext.shadowBlur = 0;
+                pop();
+            }
+            
+            // Crayon scribbles
+            stroke(random(255), random(255), random(255));
+            strokeWeight(5);
+            if (frameCount % 3 === 0) {
+                line(random(width), random(height), random(width), random(height));
+            }
+            
+            showInstruction("Childhood memories flash... Toys, laughter, innocence...");
+        }
+        
+        function memory_PhotoAlbum() {
+            background(101, 67, 33);
+            
+            // Page turning effect
+            let pageFlip = sin(time * 2) * 0.1;
+            
+            // Photo album pages
+            for (let page = 0; page < 3; page++) {
+                push();
+                translate(page * 20, page * 10);
+                
+                // Page background
+                fill(240, 230, 200);
+                noStroke();
+                rect(50 + page * pageFlip * 50, 50, width - 100, height - 100);
+                
+                // Photos on page
+                for (let i = 0; i < 4; i++) {
+                    let photoX = 100 + (i % 2) * 200;
+                    let photoY = 100 + Math.floor(i / 2) * 150;
+                    
+                    // Photo frame
+                    fill(255);
+                    stroke(200);
+                    strokeWeight(2);
+                    rect(photoX, photoY, 120, 100);
+                    
+                    // Photo content (abstract memory)
+                    fill(random(150, 255), random(100, 200), random(50, 150));
+                    noStroke();
+                    
+                    for (let j = 0; j < 10; j++) {
+                        ellipse(photoX + random(120), photoY + random(100), random(5, 15));
+                    }
+                }
+                
+                pop();
+            }
+            
+            showInstruction("You flip through the album of your life...");
+        }
+        
+        function memory_FadingMoments() {
+            let fade = map(journeyProgress, 0, 1, 255, 50);
+            background(fade * 0.5, fade * 0.4, fade * 0.3);
+            
+            // Fading memory fragments
+            let memories = ["Mom", "Dad", "Home", "Friends", "Love", "School", "Summer", "Winter"];
+            
+            for (let i = 0; i < memories.length; i++) {
+                let alpha = sin(time + i) * 127 + 128;
+                alpha *= (fade / 255);
+                
+                fill(255, 255, 255, alpha);
+                textSize(24 + sin(time * 2 + i) * 8);
+                textAlign(CENTER);
+                
+                let x = noise(i, time * 0.1) * width;
+                let y = noise(i + 100, time * 0.1) * height;
+                
+                text(memories[i], x, y);
+            }
+            
+            showInstruction("Memories fade... some remain, others drift away...");
+        }
+        
+        function memory_PresentReturn() {
+            background(0, 0, 0);
+            
+            // Return to present - mirror effect
+            let returnProgress = journeyProgress;
+            
+            // Mirror reflection
+            push();
+            translate(width/2, height/2);
+            scale(1, -1);
+            
+            fill(255, 255, 255, returnProgress * 255);
+            textAlign(CENTER, CENTER);
+            textSize(32);
+            text("NOW", 0, 0);
+            
+            pop();
+            
+            // Normal text
+            fill(255, 255, 255, returnProgress * 255);
+            textAlign(CENTER, CENTER);
+            textSize(32);
+            text("NOW", width/2, height/2);
+            
+            showInstruction("You return to the present... The here and now...");
+        }
+        
+        function drawMemoriesDream() {
+            // Sepia-toned background
+            background(139, 125, 107);
+            
+            // Memory fragments (polaroid-like rectangles)
+            for (let i = 0; i < 10; i++) {
+                push();
+                
+                let x = noise(i * 0.1, time * 0.01) * width;
+                let y = noise(i * 0.1 + 200, time * 0.015) * height;
+                
+                translate(x, y);
+                rotate(sin(time + i) * 0.3);
+                
+                // Polaroid frame
+                fill(255, 255, 240);
+                stroke(200, 200, 180);
+                strokeWeight(3);
+                rect(-60, -80, 120, 140);
+                
+                // Photo area
+                fill(random(100, 200), random(100, 150), random(80, 120));
+                noStroke();
+                rect(-50, -70, 100, 80);
+                
+                // Random elements in photos
+                fill(255, 255, 255, 100);
+                ellipse(random(-30, 30), random(-40, 20), random(10, 30));
+                
+                pop();
+            }
+            
+            // Floating dust motes
+            for (let i = 0; i < 50; i++) {
+                let x = (noise(i * 0.05, time * 0.01) * width * 2) % width;
+                let y = (noise(i * 0.05 + 300, time * 0.008) * height * 2) % height;
+                
+                fill(255, 255, 255, random(50, 150));
+                noStroke();
+                ellipse(x, y, 2);
+            }
+        }
+
+        // ========= INTERACTIONS =========
+        function mousePressed() {
+            // Create ripple effect
+            ripples.push(new Ripple(mouseX, mouseY));
+            
+            if (isOnStartScreen) {
+                spawnDreamSentence();
+                playDreamSound(-1, 0.3);
+                
+                // Add particles at mouse position
+                for (let i = 0; i < 5; i++) {
+                    let particle = new StartParticle();
+                    particle.x = mouseX + random(-50, 50);
+                    particle.y = mouseY + random(-50, 50);
+                    startScreenParticles.push(particle);
+                }
+            } else {
+                spawnDreamSentence();
+                playDreamSound(currentDream, 0.4);
+                
+                // Dream-specific interactions
+                switch(currentDream) {
+                    case 0: // Schäfchen - add more sheep
+                        sheep.push(new Sheep());
+                        break;
+                    case 1: // Alptraum - create disturbance
+                        nightmareElements.push(new NightmareElement());
+                        break;
+                    case 2: // Schwerelosigkeit - gravity effect
+                        // Handled in draw function with mouseIsPressed
+                        break;
+                    case 3: // Gedanken - spawn thought bubble
+                        spawnDreamSentence();
+                        break;
+                    case 4: // Erinnerungen - fade effect
+                        // Visual feedback handled in display
+                        break;
+                }
+            }
+        }
+
+        function mouseMoved() {
+            // Create subtle particle trail on start screen
+            if (isOnStartScreen && random(1) < 0.1) {
+                let particle = new StartParticle();
+                particle.x = mouseX;
+                particle.y = mouseY;
+                particle.size = random(1, 3);
+                startScreenParticles.push(particle);
+            }
+        }
+
+        function doubleClicked() {
+            // Double click for extra effects
+            ripples.push(new Ripple(mouseX, mouseY));
+            spawnDreamSentence();
+        }
+
+        function keyPressed() {
+            // Space bar to spawn sentences
+            if (key === ' ') {
+                spawnDreamSentence();
+                playDreamSound(currentDream, 0.3);
+            }
+            
+            // Number keys to switch dreams
+            if (key >= '1' && key <= '5') {
+                let dreamNum = parseInt(key) - 1;
+                switchDream(dreamNum);
+            }
+        }
+
+        function switchDream(dreamIndex) {
+            if (dreamIndex === currentDream && !isOnStartScreen) return;
+            
+            // Start dream journey
+            startDreamJourney(dreamIndex);
+        }
+        
+        function startDreamJourney(dreamIndex) {
+            // Hide start screen with zoom effect
+            isOnStartScreen = false;
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('dream-overlay').classList.add('active');
+            document.getElementById('progress-bar').classList.add('visible');
+            
+            currentDream = dreamIndex;
+            dreamSentences = [];
+            textParticles = [];
+            
+            // Dream-specific durations and stages
+            let dreamConfigs = {
+                0: { stages: 5, duration: 7000 }, // Sheep counting - calm pace
+                1: { stages: 5, duration: 5000 }, // Nightmare - fast, intense
+                2: { stages: 5, duration: 8000 }, // Weightless - slow, floating
+                3: { stages: 5, duration: 6000 }, // Thoughts - medium pace
+                4: { stages: 5, duration: 7000 }  // Memory - nostalgic pace
+            };
+            
+            let config = dreamConfigs[dreamIndex];
+            maxJourneyStages = config.stages;
+            stageDuration = config.duration;
+            
+            // Initialize journey
+            dreamJourneyActive = true;
+            journeyStage = 0;
+            journeyProgress = 0;
+            stageStartTime = millis();
+            
+            // Reset dream-specific variables
+            sheepCount = 0;
+            nightmareIntensity = 0;
+            weightlessGravity = 1;
+            thoughtComplexity = 0;
+            memoryClarity = 1;
+            
+            const dreamData = {
+                0: { title: 'SHEEP DREAM', desc: 'Let yourself be gently lulled to sleep...' },
+                1: { title: 'NIGHTMARE JOURNEY', desc: 'Face your darkest fears...' },
+                2: { title: 'WEIGHTLESSNESS', desc: 'Escape the gravity of everyday life...' },
+                3: { title: 'THOUGHT SYMPHONY', desc: 'Dive into the music of consciousness...' },
+                4: { title: 'MEMORY JOURNEY', desc: 'Wander through the halls of time...' }
+            };
+            
+            document.getElementById('dream-title').textContent = dreamData[dreamIndex].title;
+            document.getElementById('dream-description').textContent = dreamData[dreamIndex].desc;
+            
+            playDreamSound(dreamIndex, 0.8);
+            
+            // Hide UI elements during journey
+            document.getElementById('back-button').classList.remove('visible');
+        }
+        
+        function endDreamJourney() {
+            // End the journey and return to start
+            dreamJourneyActive = false;
+            
+            setTimeout(() => {
+                returnToStart();
+            }, 2000);
+        }
+        
+        function returnToStart() {
+            isOnStartScreen = true;
+            currentDream = -1;
+            dreamSentences = [];
+            textParticles = [];
+            dreamJourneyActive = false;
+            
+            document.getElementById('start-screen').classList.remove('hidden');
+            document.getElementById('dream-overlay').classList.remove('active');
+            document.getElementById('progress-bar').classList.remove('visible');
+            document.getElementById('back-button').classList.remove('visible');
+            
+            hideInstruction();
+            
+            document.getElementById('dream-title').textContent = 'DREAMSCAPES';
+            document.getElementById('dream-description').textContent = 'Choose a dream to dive into...';
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+
+        // ========= EVENT LISTENERS =========
+        document.getElementById('audio-toggle').addEventListener('click', initAudio);
+        document.getElementById('back-button').addEventListener('click', returnToStart);
+
+        document.querySelectorAll('.thought-bubble').forEach(bubble => {
+            bubble.addEventListener('click', () => {
+                switchDream(parseInt(bubble.dataset.dream));
+            });
+            
+            bubble.addEventListener('mouseenter', () => {
+                playDreamSound(parseInt(bubble.dataset.dream), 0.2);
+            });
+        });
+
+        // Custom cursor movement
+        document.addEventListener('mousemove', (e) => {
+            const cursor = document.querySelector('.custom-cursor');
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+
+        // Initial sentence spawn
+        setTimeout(() => {
+            spawnDreamSentence();
+            lastSentenceTime = millis();
+        }, 2000);
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Escape') {
+                returnToStart();
+            }
         });
     </script>
 </body>
