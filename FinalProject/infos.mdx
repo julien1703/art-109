@@ -587,20 +587,19 @@
                 translate(this.x, this.y);
                 rotate(this.rotation);
                 
+                // Color based on dream type
+                switch(this.dreamType) {
+                    case 0: fill(135, 206, 235, this.alpha); break; // Sky blue
+                    case 1: fill(255, 100, 100, this.alpha); break; // Red
+                    case 2: fill(78, 205, 196, this.alpha); break; // Teal
+                    case 3: fill(255, 230, 109, this.alpha); break; // Yellow
+                    case 4: fill(168, 230, 207, this.alpha); break; // Green
+                }
+                
                 textAlign(CENTER, CENTER);
                 textSize(this.size);
-                
-                // Dicker schwarzer Schatten für maximalen Kontrast
-                fill(0, 0, 0, this.alpha);
-                strokeWeight(4);
-                stroke(0, 0, 0, this.alpha);
+                textFont('Space Mono');
                 text(this.text, 0, 0);
-                
-                // Weißer Text für perfekte Lesbarkeit auf jedem Hintergrund
-                fill(255, 255, 255, this.alpha);
-                noStroke();
-                text(this.text, 0, 0);
-                
                 pop();
             }
 
@@ -1329,8 +1328,18 @@
             let fadeAlpha = map(journeyProgress, 0, 1, 0, 255);
             background(25, 25, 112, fadeAlpha);
             
-            // Gentle breathing pattern (ohne Text, nur Atmungseffekt)
-            let breathe = sin(time * 2) * 10;
+            // Gentle breathing pattern
+            let breathe = sin(time * 2) * 20;
+            push();
+            translate(width/2, height/2);
+            scale(1 + breathe * 0.01);
+            
+            fill(255, 255, 255, 50 - fadeAlpha * 0.2);
+            textAlign(CENTER);
+            textSize(24);
+            text("Zzz...", 0, 0);
+            
+            pop();
             
             showInstruction("Deep sleep... Peace... Rest...");
         }
@@ -2342,249 +2351,102 @@
         
         // ========= DREAM FUNCTIONS =========
         function drawSheepCountingDream() {
-            // Magischer Aurora-Himmel
-            for (let i = 0; i <= height; i += 2) {
+            // Gradient sky background
+            for (let i = 0; i <= height; i++) {
                 let inter = map(i, 0, height, 0, 1);
-                
-                // Aurora-Farben
-                let r = map(sin(time * 0.3 + inter * PI * 2), -1, 1, 15, 80);
-                let g = map(sin(time * 0.4 + inter * PI * 1.5), -1, 1, 25, 120);
-                let b = map(sin(time * 0.2 + inter * PI), -1, 1, 60, 180);
-                
-                stroke(r, g, b, 150 + sin(time + inter * 10) * 50);
-                strokeWeight(2);
+                let c = lerpColor(color(25, 25, 112), color(0, 0, 0), inter);
+                stroke(c);
                 line(0, i, width, i);
             }
             
-            // Magische Sterne mit Glitzer-Effekt
-            for (let i = 0; i < 200; i++) {
-                let x = (noise(i * 0.1, time * 0.02) * width * 2) % width;
-                let y = (i * 73) % (height * 0.7);
-                let twinkle = sin(time * 3 + i) * 127 + 128;
-                let size = 1 + sin(time * 2 + i * 0.5) * 2;
-                
-                // Stern-Glow-Effekt
-                fill(255, 255, 220, twinkle * 0.3);
+            // Stars
+            for (let i = 0; i < 150; i++) {
+                let x = (noise(i * 0.1, time * 0.05) * width * 2) % width;
+                let y = (i * 73) % (height * 0.6);
+                let brightness = noise(i * 0.1, time * 0.1) * 255;
+                fill(255, 255, 255, brightness);
                 noStroke();
-                ellipse(x, y, size * 4);
-                
-                fill(255, 255, 255, twinkle);
-                ellipse(x, y, size);
-                
-                // Sternkreuz
-                stroke(255, 255, 255, twinkle * 0.8);
-                strokeWeight(1);
-                line(x - size * 2, y, x + size * 2, y);
-                line(x, y - size * 2, x, y + size * 2);
+                ellipse(x, y, random(1, 3));
             }
             
-            // Magischer Zaun mit Glitzer
+            // Fence
             stroke(139, 69, 19);
             strokeWeight(8);
             let fenceY = height * 0.75;
             line(0, fenceY, width, fenceY);
             
-            // Zauberhafte Zaunpfosten mit Glitzer
+            // Fence posts
             for (let x = 100; x < width; x += 150) {
-                // Pfosten
-                stroke(139, 69, 19);
-                strokeWeight(8);
                 line(x, fenceY - 50, x, fenceY + 20);
-                
-                // Glitzer auf den Pfosten
-                for (let g = 0; g < 3; g++) {
-                    let glitterY = fenceY - 40 + g * 15 + sin(time * 4 + x + g) * 5;
-                    fill(255, 255, 200, 150 + sin(time * 6 + x + g) * 105);
-                    noStroke();
-                    ellipse(x, glitterY, 4);
-                }
             }
             
-            // Schäfchen mit Regenbogen-Trails
+            // Update and display sheep
             sheep.forEach(sheepObj => {
                 sheepObj.update();
                 sheepObj.display();
             });
             
-            // Traumhafter Mond mit Aura
-            push();
-            translate(width * 0.8, height * 0.2);
-            
-            // Mond-Aura
-            for (let aura = 0; aura < 5; aura++) {
-                let auraAlpha = map(aura, 0, 5, 60, 0);
-                fill(255, 255, 200, auraAlpha);
-                noStroke();
-                ellipse(0, 0, 120 + aura * 20 + sin(time * 2) * 10);
-            }
-            
-            // Mond-Kern
-            fill(255, 255, 224, 240);
-            ellipse(0, 0, 120);
-            
-            // Mondkrater
-            fill(240, 240, 200, 100);
-            ellipse(-15, -10, 20);
-            ellipse(20, 15, 15);
-            ellipse(-8, 25, 12);
-            
-            pop();
+            // Moon
+            fill(255, 255, 224, 200);
+            noStroke();
+            ellipse(width * 0.8, height * 0.2, 120);
         }
 
         function drawNightmareDream() {
-            // Dunkel pulsierender Horror-Hintergrund
-            let pulse = sin(time * 4) * 20;
-            let bgR = 15 + pulse + sin(time * 3.2) * 15;
-            let bgG = 0 + sin(time * 2.7) * 8;
-            let bgB = 15 + pulse + sin(time * 2.1) * 12;
+            // Dark, shifting background
+            let bgR = 20 + sin(time * 2) * 10;
+            let bgG = 0;
+            let bgB = 20 + sin(time * 1.5) * 10;
             background(bgR, bgG, bgB);
             
-            // Glitch-Effekt
-            if (random(1) < 0.15) {
-                push();
-                translate(random(-10, 10), random(-5, 5));
-                tint(255, 0, 0, 180);
-                // Glitch-Streifen
-                for (let i = 0; i < 8; i++) {
-                    let y = random(height);
-                    fill(255, 0, 50, 200);
-                    rect(0, y, width, random(2, 8));
-                }
-                pop();
-            }
-            
-            // Unsichtbare Augen die einen verfolgen
-            for (let i = 0; i < 12; i++) {
-                let eyeX = noise(i * 0.3, time * 0.1) * width;
-                let eyeY = noise(i * 0.3 + 100, time * 0.08) * height;
-                
-                // Auge wird nur manchmal sichtbar
-                if (sin(time * 2 + i) > 0.7) {
-                    let alpha = (sin(time * 2 + i) - 0.7) * 255 / 0.3;
-                    
-                    // Pupille folgt der Maus
-                    let lookX = lerp(eyeX, mouseX, 0.3);
-                    let lookY = lerp(eyeY, mouseY, 0.3);
-                    
-                    // Auge-Glow
-                    fill(150, 0, 0, alpha * 0.5);
-                    ellipse(eyeX, eyeY, 40);
-                    
-                    // Iris
-                    fill(200, 0, 0, alpha);
-                    ellipse(eyeX, eyeY, 25);
-                    
-                    // Pupille
-                    fill(0, 0, 0, alpha);
-                    ellipse(lookX, lookY, 12);
-                    
-                    // Glanz im Auge
-                    fill(255, 255, 255, alpha * 0.8);
-                    ellipse(lookX - 3, lookY - 3, 4);
-                }
-            }
-            
-            // Horror-Nebel mit Tentakeln
-            for (let i = 0; i < 15; i++) {
-                let x = noise(i * 0.2, time * 0.03) * width;
-                let y = height * 0.7 + sin(time * 0.8 + i) * 80;
-                
-                // Tentakel-artige Nebel
-                push();
-                translate(x, y);
-                
-                for (let j = 0; j < 5; j++) {
-                    let tentacleX = cos(time * 2 + i + j) * (j * 25);
-                    let tentacleY = sin(time * 1.5 + i + j) * (j * 15);
-                    
-                    fill(30, 0, 30, 120 - j * 20);
-                    noStroke();
-                    ellipse(tentacleX, tentacleY, 60 - j * 8, 30 - j * 4);
-                }
-                pop();
-            }
-            
-            // Alptraum-Elemente
+            // Nightmare elements
             nightmareElements.forEach(element => {
                 element.update();
                 element.display();
             });
+            
+            // Flickering effect
+            if (random(1) < 0.1) {
+                fill(255, 0, 0, 30);
+                noStroke();
+                rect(0, 0, width, height);
+            }
+            
+            // Creepy fog effect
+            for (let i = 0; i < 20; i++) {
+                let x = noise(i * 0.1, time * 0.05) * width;
+                let y = height * 0.8 + sin(time + i) * 50;
+                fill(50, 50, 50, 100);
+                noStroke();
+                ellipse(x, y, 200, 50);
+            }
         }
 
         function drawWeightlessDream() {
-            // Majestätischer Nebel-Weltraum
-            for (let i = 0; i <= height; i += 3) {
+            // Cosmic gradient background
+            for (let i = 0; i <= height; i++) {
                 let inter = map(i, 0, height, 0, 1);
-                let nebulaR = map(noise(inter * 0.01, time * 0.05), 0, 1, 0, 60);
-                let nebulaG = map(noise(inter * 0.01 + 50, time * 0.04), 0, 1, 10, 100);
-                let nebulaB = map(noise(inter * 0.01 + 100, time * 0.06), 0, 1, 40, 180);
-                
-                stroke(nebulaR, nebulaG, nebulaB, 120 + sin(time + inter * 8) * 60);
-                strokeWeight(2 + sin(time * 2 + inter * 12) * 1);
+                let c = lerpColor(color(0, 0, 50), color(0, 50, 100), inter);
+                stroke(c);
                 line(0, i, width, i);
             }
             
-            // 3D schwebende Objekte mit Gravitationsfeldern
-            let objects = ["☕", "📚", "🪑", "🕰️", "🎈", "🍎", "✏️", "💡", "🌟", "🔮"];
-            
-            for (let i = 0; i < objects.length; i++) {
-                let baseX = noise(i * 0.3, time * 0.05) * width;
-                let baseY = noise(i * 0.3 + 500, time * 0.04) * height;
-                
-                // 3D-Orbital-Bewegung
-                let orbitRadius = 100 + sin(time * 0.7 + i) * 50;
-                let orbitSpeed = time * (0.4 + i * 0.08);
-                let x = baseX + sin(orbitSpeed) * orbitRadius * 0.8;
-                let y = baseY + cos(orbitSpeed * 1.2) * orbitRadius * 0.6;
-                let z = sin(orbitSpeed * 0.9) * 60; // Z-Tiefe für Größeneffekt
-                
-                // Gravitationsfeld-Visualisierung
-                push();
-                translate(x, y);
-                noFill();
-                for (let r = 0; r < 6; r++) {
-                    let alpha = map(r, 0, 6, 100, 0);
-                    stroke(120 + i * 15, 180 + i * 8, 255, alpha);
-                    strokeWeight(1.5);
-                    ellipse(0, 0, (r + 1) * 30 + sin(time * 3 + i + r) * 10);
-                }
-                
-                // Objekt mit Tiefeneffekt
-                let scale = map(z, -60, 60, 0.4, 1.6);
-                push();
-                scale(scale);
-                rotate(sin(time * 1.5 + i) * PI);
-                
-                textSize(50);
-                textAlign(CENTER, CENTER);
-                fill(255, 255, 255, 180 + sin(time * 2.5 + i) * 75);
-                text(objects[i], 0, 0);
-                pop();
-                pop();
-            }
-            
-            // Schwebende Partikel
+            // Floating particles
             floatingParticles.forEach(particle => {
                 particle.update();
                 particle.display();
             });
             
-            // Gravitationswellen bei Mausinteraktion
+            // Gravity wells (mouse interaction)
             if (mouseIsPressed) {
                 push();
                 translate(mouseX, mouseY);
                 
-                for (let r = 5; r < 300; r += 25) {
-                    let alpha = map(r, 5, 300, 255, 0);
+                for (let r = 5; r < 200; r += 20) {
                     noFill();
-                    stroke(100, 255, 200, alpha * 0.6);
-                    strokeWeight(3);
-                    ellipse(0, 0, r + sin(time * 6) * 15);
-                    
-                    // Welleneffekt
-                    stroke(150, 255, 255, alpha * 0.3);
-                    strokeWeight(1);
-                    ellipse(0, 0, r * 1.3 + cos(time * 4) * 20);
+                    stroke(78, 205, 196, map(r, 5, 200, 200, 20));
+                    strokeWeight(2);
+                    ellipse(0, 0, r);
                 }
                 pop();
             }
