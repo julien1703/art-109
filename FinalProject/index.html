@@ -385,13 +385,13 @@
         }
 
         // ========= MAIN VARIABLES =========
-        let currentDream = -1; // -1 für Startseite
+        let currentDream = -1; // -1 for homepage
         let time = 0;
         let mouseTrail = [];
         let dreamSentences = [];
         let isOnStartScreen = true;
         let lastSentenceTime = 0;
-        let sentenceInterval = 3000; // 3 Sekunden
+        let sentenceInterval = 3000; // 3 seconds
         let startScreenParticles = [];
         let ripples = [];
         
@@ -590,13 +590,13 @@
                 textAlign(CENTER, CENTER);
                 textSize(this.size);
                 
-                // Dicker schwarzer Schatten für maximalen Kontrast
+                // Thick black shadow for maximum contrast
                 fill(0, 0, 0, this.alpha);
                 strokeWeight(4);
                 stroke(0, 0, 0, this.alpha);
                 text(this.text, 0, 0);
                 
-                // Weißer Text für perfekte Lesbarkeit auf jedem Hintergrund
+                // White text for perfect readability on any background
                 fill(255, 255, 255, this.alpha);
                 noStroke();
                 text(this.text, 0, 0);
@@ -1811,37 +1811,142 @@
         }
         
         function weightless_LiftOff() {
-            background(0, 0, 50);
+            // Magical portal-to-dimension transition
+            let portalRadius = map(journeyProgress, 0, 1, 0, width);
             
-            // Rising effect
-            let liftForce = map(journeyProgress, 0, 1, height, height * 0.3);
+            // Dark spacetime background
+            background(5, 5, 25);
             
+            // Swirling portal in the center
             push();
-            translate(0, liftForce - height);
+            translate(width/2, height/2);
             
-            // Ground falling away
-            fill(50, 100, 50);
-            rect(0, height * 0.8, width, height * 0.2);
-            
-            // Buildings shrinking
-            for (let i = 0; i < 10; i++) {
-                let buildingHeight = random(50, 200);
-                fill(100, 100, 100);
-                rect(i * (width/10), height * 0.8 - buildingHeight, width/10 - 5, buildingHeight);
+            // Portal vortex with spacetime distortion
+            for (let layer = 0; layer < 15; layer++) {
+                let layerRadius = portalRadius - layer * 30;
+                if (layerRadius > 0) {
+                    let rotation = time * (2 + layer * 0.3) + layer;
+                    
+                    push();
+                    rotate(rotation);
+                    
+                    // Portal ring with energy
+                    for (let i = 0; i < 60; i++) {
+                        let angle = (i / 60) * TWO_PI;
+                        let x = cos(angle) * layerRadius;
+                        let y = sin(angle) * layerRadius;
+                        
+                        let energy = sin(time * 8 + i + layer) * 50 + 150;
+                        let hue = (layer * 25 + time * 50 + i * 6) % 360;
+                        
+                        colorMode(HSB);
+                        fill(hue, 80, 90, energy);
+                        ellipse(x, y, 8 - layer * 0.3);
+                    }
+                    
+                    pop();
+                }
             }
             
+            colorMode(RGB);
             pop();
             
-            // Stars appearing
-            for (let i = 0; i < 100; i++) {
-                let starAlpha = map(journeyProgress, 0, 1, 0, 255);
-                fill(255, 255, 255, starAlpha);
-                let x = (i * 137) % width;
-                let y = (i * 73) % height;
-                ellipse(x, y, 2);
+            // Quantum tunnel effect - objects materialize
+            let materialObjects = ["🏠", "🌳", "🚗", "⛰️", "🌊", "☁️", "🌞", "🌙"];
+            
+            for (let i = 0; i < materialObjects.length; i++) {
+                if (journeyProgress > i * 0.12) {
+                    let objProgress = map(journeyProgress, i * 0.12, 1, 0, 1);
+                    let objScale = map(objProgress, 0, 1, 0.1, 2.0);
+                    let objAlpha = map(objProgress, 0, 1, 50, 255);
+                    
+                    // Objects float out of the portal
+                    let angle = (i / materialObjects.length) * TWO_PI + time * 0.5;
+                    let distance = map(objProgress, 0, 1, 50, 300);
+                    let x = width/2 + cos(angle) * distance;
+                    let y = height/2 + sin(angle) * distance;
+                    
+                    push();
+                    translate(x, y);
+                    scale(objScale);
+                    rotate(sin(time * 2 + i) * 0.5);
+                    
+                    // Quantum glow around objects
+                    for (let glow = 3; glow > 0; glow--) {
+                        let glowAlpha = objAlpha * 0.3 * (4 - glow) / 3;
+                        fill(100 + i * 20, 200, 255, glowAlpha);
+                        textSize(60 + glow * 15);
+                        textAlign(CENTER, CENTER);
+                        text(materialObjects[i], 0, 0);
+                    }
+                    
+                    // Main object
+                    fill(255, 255, 255, objAlpha);
+                    textSize(60);
+                    text(materialObjects[i], 0, 0);
+                    
+                    pop();
+                }
             }
             
-            showInstruction("You feel gravity letting go... You're lifting off...");
+            // Weightlessness molecules
+            for (let molecule = 0; molecule < 100; molecule++) {
+                let molX = noise(molecule * 0.1, time * 0.02) * width;
+                let molY = noise(molecule * 0.1 + 500, time * 0.015) * height;
+                
+                // Molecule floats upward
+                let floatY = molY - (journeyProgress * 200);
+                if (floatY > -20 && floatY < height + 20) {
+                    
+                    let molSize = 3 + sin(time * 4 + molecule) * 2;
+                    let molAlpha = 100 + sin(time * 3 + molecule) * 100;
+                    
+                    // Molecule with connection lines
+                    if (molecule % 3 === 0) {
+                        stroke(150, 255, 200, molAlpha * 0.5);
+                        strokeWeight(1);
+                        
+                        let nextMol = (molecule + 1) % 100;
+                        let nextX = noise(nextMol * 0.1, time * 0.02) * width;
+                        let nextY = noise(nextMol * 0.1 + 500, time * 0.015) * height - (journeyProgress * 200);
+                        
+                        if (dist(molX, floatY, nextX, nextY) < 80) {
+                            line(molX, floatY, nextX, nextY);
+                        }
+                    }
+                    
+                    // Molecule core
+                    fill(200, 255, 150, molAlpha);
+                    noStroke();
+                    ellipse(molX, floatY, molSize);
+                }
+            }
+            
+            // Dimensional rifts in reality
+            if (journeyProgress > 0.5) {
+                let riftProgress = map(journeyProgress, 0.5, 1, 0, 1);
+                
+                for (let rift = 0; rift < 5; rift++) {
+                    let riftX = random(width);
+                    let riftY = random(height);
+                    let riftLength = riftProgress * 150;
+                    
+                    stroke(255, 100, 255, 200 * riftProgress);
+                    strokeWeight(3);
+                    
+                    // Jagged reality rifts
+                    for (let r = 0; r < riftLength; r += 10) {
+                        let x1 = riftX + r + random(-5, 5);
+                        let y1 = riftY + sin(r * 0.1) * 20 + random(-3, 3);
+                        let x2 = riftX + r + 10 + random(-5, 5);
+                        let y2 = riftY + sin((r + 10) * 0.1) * 20 + random(-3, 3);
+                        
+                        line(x1, y1, x2, y2);
+                    }
+                }
+            }
+            
+            showInstruction("Reality bends... You enter the weightless dimension...");
         }
         
         function weightless_FloatingObjects() {
@@ -2400,17 +2505,17 @@
                 }
             }
             
-            // Schäfchen mit Regenbogen-Trails
+            // Sheep with rainbow trails
             sheep.forEach(sheepObj => {
                 sheepObj.update();
                 sheepObj.display();
             });
             
-            // Traumhafter Mond mit Aura
+            // Dreamy moon with aura
             push();
             translate(width * 0.8, height * 0.2);
             
-            // Mond-Aura
+            // Moon aura
             for (let aura = 0; aura < 5; aura++) {
                 let auraAlpha = map(aura, 0, 5, 60, 0);
                 fill(255, 255, 200, auraAlpha);
@@ -2418,11 +2523,11 @@
                 ellipse(0, 0, 120 + aura * 20 + sin(time * 2) * 10);
             }
             
-            // Mond-Kern
+            // Moon core
             fill(255, 255, 224, 240);
             ellipse(0, 0, 120);
             
-            // Mondkrater
+            // Moon craters
             fill(240, 240, 200, 100);
             ellipse(-15, -10, 20);
             ellipse(20, 15, 15);
@@ -2504,7 +2609,7 @@
                 pop();
             }
             
-            // Alptraum-Elemente
+            // Nightmare elements
             nightmareElements.forEach(element => {
                 element.update();
                 element.display();
@@ -2512,56 +2617,111 @@
         }
 
         function drawWeightlessDream() {
-            // Majestätischer Nebel-Weltraum
-            for (let i = 0; i <= height; i += 3) {
+            // Deep space with star nebulas
+            for (let i = 0; i <= height; i += 2) {
                 let inter = map(i, 0, height, 0, 1);
-                let nebulaR = map(noise(inter * 0.01, time * 0.05), 0, 1, 0, 60);
-                let nebulaG = map(noise(inter * 0.01 + 50, time * 0.04), 0, 1, 10, 100);
-                let nebulaB = map(noise(inter * 0.01 + 100, time * 0.06), 0, 1, 40, 180);
+                let cosmic = noise(inter * 0.02, time * 0.03) * 255;
+                let r = map(sin(time * 0.1 + inter * PI * 3), -1, 1, 0, 40) + cosmic * 0.1;
+                let g = map(sin(time * 0.15 + inter * PI * 2), -1, 1, 10, 80) + cosmic * 0.15;
+                let b = map(sin(time * 0.12 + inter * PI * 4), -1, 1, 30, 150) + cosmic * 0.2;
                 
-                stroke(nebulaR, nebulaG, nebulaB, 120 + sin(time + inter * 8) * 60);
-                strokeWeight(2 + sin(time * 2 + inter * 12) * 1);
+                stroke(r, g, b, 180 + sin(time + inter * 10) * 50);
+                strokeWeight(1.5);
                 line(0, i, width, i);
             }
             
-            // 3D schwebende Objekte mit Gravitationsfeldern
-            let objects = ["☕", "📚", "🪑", "🕰️", "🎈", "🍎", "✏️", "💡", "🌟", "🔮"];
+            // Schwebender Astronaut
+            push();
+            let astronautX = width * 0.3 + sin(time * 0.5) * 150;
+            let astronautY = height * 0.4 + cos(time * 0.3) * 100;
+            translate(astronautX, astronautY);
             
-            for (let i = 0; i < objects.length; i++) {
-                let baseX = noise(i * 0.3, time * 0.05) * width;
-                let baseY = noise(i * 0.3 + 500, time * 0.04) * height;
+            // Astronauten-Glow
+            fill(255, 255, 255, 100);
+            ellipse(0, 0, 120);
+            
+            rotate(sin(time * 0.2) * 0.3);
+            textSize(60);
+            textAlign(CENTER, CENTER);
+            fill(255, 255, 255, 230);
+            text("🚀", 0, 0);
+            
+            // Antigravitations-Partikel um den Astronauten
+            for (let p = 0; p < 12; p++) {
+                let pAngle = (p / 12) * TWO_PI + time;
+                let pRadius = 50 + sin(time * 2 + p) * 20;
+                let px = cos(pAngle) * pRadius;
+                let py = sin(pAngle) * pRadius;
                 
-                // 3D-Orbital-Bewegung
-                let orbitRadius = 100 + sin(time * 0.7 + i) * 50;
-                let orbitSpeed = time * (0.4 + i * 0.08);
-                let x = baseX + sin(orbitSpeed) * orbitRadius * 0.8;
-                let y = baseY + cos(orbitSpeed * 1.2) * orbitRadius * 0.6;
-                let z = sin(orbitSpeed * 0.9) * 60; // Z-Tiefe für Größeneffekt
+                fill(100, 200, 255, 150 + sin(time * 3 + p) * 100);
+                ellipse(px, py, 8 + sin(time * 4 + p) * 4);
+            }
+            pop();
+            
+            // Schwebende Planeten mit Gravitationsfeldern
+            let planets = ["🪐", "🌍", "🌕", "☀️", "🌙", "⭐"];
+            
+            for (let i = 0; i < planets.length; i++) {
+                let planetX = noise(i * 0.5, time * 0.02) * width;
+                let planetY = noise(i * 0.5 + 300, time * 0.025) * height;
                 
-                // Gravitationsfeld-Visualisierung
+                // Schwebende Bewegung
+                let floatX = planetX + sin(time * 0.4 + i) * 80;
+                let floatY = planetY + cos(time * 0.6 + i) * 60;
+                
                 push();
-                translate(x, y);
-                noFill();
-                for (let r = 0; r < 6; r++) {
-                    let alpha = map(r, 0, 6, 100, 0);
-                    stroke(120 + i * 15, 180 + i * 8, 255, alpha);
-                    strokeWeight(1.5);
-                    ellipse(0, 0, (r + 1) * 30 + sin(time * 3 + i + r) * 10);
+                translate(floatX, floatY);
+                
+                // Gravitationsfeld
+                for (let field = 1; field <= 4; field++) {
+                    let fieldAlpha = map(field, 1, 4, 120, 20);
+                    noFill();
+                    stroke(50 + i * 30, 150 + i * 20, 255, fieldAlpha);
+                    strokeWeight(2);
+                    ellipse(0, 0, field * 40 + sin(time * 2 + i + field) * 15);
                 }
                 
-                // Objekt mit Tiefeneffekt
-                let scale = map(z, -60, 60, 0.4, 1.6);
-                push();
-                scale(scale);
-                rotate(sin(time * 1.5 + i) * PI);
+                // Planet mit Rotation
+                rotate(time * (0.5 + i * 0.2));
+                let planetSize = 40 + sin(time + i) * 10;
                 
-                textSize(50);
+                // Planet-Glow
+                fill(100 + i * 40, 150 + i * 20, 255, 150);
+                ellipse(0, 0, planetSize * 1.5);
+                
+                // Planet selbst
+                textSize(planetSize);
                 textAlign(CENTER, CENTER);
-                fill(255, 255, 255, 180 + sin(time * 2.5 + i) * 75);
-                text(objects[i], 0, 0);
-                pop();
+                fill(255, 255, 255, 200 + sin(time * 2 + i) * 55);
+                text(planets[i], 0, 0);
+                
                 pop();
             }
+            
+            // Anti-Gravitations-Wellen
+            push();
+            translate(width/2, height/2);
+            
+            for (let wave = 0; wave < 8; wave++) {
+                let waveRadius = (time * 60 + wave * 40) % 300;
+                let waveAlpha = map(waveRadius, 0, 300, 200, 0);
+                
+                noFill();
+                stroke(150, 200, 255, waveAlpha);
+                strokeWeight(3);
+                
+                // Wellige Anti-Gravitations-Kreise
+                beginShape();
+                for (let a = 0; a < TWO_PI; a += 0.1) {
+                    let r = waveRadius + sin(a * 6 + time * 3) * 15;
+                    let x = cos(a) * r;
+                    let y = sin(a) * r;
+                    vertex(x, y);
+                }
+                endShape(CLOSE);
+            }
+            pop();
+            
             
             // Schwebende Partikel
             floatingParticles.forEach(particle => {
@@ -2569,53 +2729,158 @@
                 particle.display();
             });
             
-            // Gravitationswellen bei Mausinteraktion
+            // Anti-Gravitations-Interaktion bei Mausklick
             if (mouseIsPressed) {
                 push();
                 translate(mouseX, mouseY);
                 
-                for (let r = 5; r < 300; r += 25) {
-                    let alpha = map(r, 5, 300, 255, 0);
+                for (let r = 10; r < 250; r += 30) {
+                    let alpha = map(r, 10, 250, 255, 0);
                     noFill();
-                    stroke(100, 255, 200, alpha * 0.6);
-                    strokeWeight(3);
-                    ellipse(0, 0, r + sin(time * 6) * 15);
+                    stroke(150, 255, 200, alpha * 0.8);
+                    strokeWeight(4);
                     
-                    // Welleneffekt
-                    stroke(150, 255, 255, alpha * 0.3);
-                    strokeWeight(1);
-                    ellipse(0, 0, r * 1.3 + cos(time * 4) * 20);
+                    // Anti-Gravitations-Wellen
+                    beginShape();
+                    for (let a = 0; a < TWO_PI; a += 0.2) {
+                        let waveR = r + sin(a * 4 + time * 6) * 8;
+                        let x = cos(a) * waveR;
+                        let y = sin(a) * waveR;
+                        vertex(x, y);
+                    }
+                    endShape(CLOSE);
                 }
                 pop();
             }
         }
 
         function drawThoughtsDream() {
-            // Soft gradient
-            for (let i = 0; i <= height; i++) {
+            // Consciousness gradient with pulsating brain waves
+            for (let i = 0; i <= height; i += 3) {
                 let inter = map(i, 0, height, 0, 1);
-                let c = lerpColor(color(255, 230, 109, 50), color(255, 255, 255, 10), inter);
-                stroke(c);
+                let brainwave = sin(time * 4 + inter * PI * 8) * 30;
+                
+                let r = map(sin(time * 0.2 + inter * PI * 2), -1, 1, 20, 100) + brainwave * 0.3;
+                let g = map(sin(time * 0.3 + inter * PI * 3), -1, 1, 0, 80) + brainwave * 0.2;
+                let b = map(sin(time * 0.25 + inter * PI * 4), -1, 1, 40, 200) + brainwave * 0.4;
+                
+                stroke(r, g, b, 150 + sin(time * 2 + inter * 12) * 100);
+                strokeWeight(2);
                 line(0, i, width, i);
             }
             
-            // Thought bubbles
-            for (let i = 0; i < 15; i++) {
-                let x = noise(i * 0.1, time * 0.02) * width;
-                let y = noise(i * 0.1 + 100, time * 0.03) * height;
-                let size = 50 + sin(time + i) * 30;
+            // Central consciousness with pulsating brain
+            push();
+            translate(width/2, height/2);
+            
+            let brainPulse = sin(time * 6) * 20;
+            
+            // Brain aura
+            for (let aura = 5; aura > 0; aura--) {
+                let auraAlpha = map(aura, 0, 5, 150, 0);
+                fill(150, 100, 255, auraAlpha);
+                ellipse(0, 0, 80 + aura * 15 + brainPulse);
+            }
+            
+            // Brain symbol
+            textSize(60 + brainPulse * 0.5);
+            textAlign(CENTER, CENTER);
+            fill(255, 200, 255, 200 + sin(time * 3) * 55);
+            text("🧠", 0, 0);
+            
+            pop();
+            
+            // Schwebende Gedankenblasen mit Ideen
+            let thoughts = ["💡", "✨", "🌈", "🔮", "🎭", "🎨", "📚", "🎵", "🌌", "❤️", "☯️", "🔥"];
+            
+            for (let i = 0; i < thoughts.length; i++) {
+                let thoughtX = noise(i * 0.4, time * 0.03) * width;
+                let thoughtY = noise(i * 0.4 + 200, time * 0.025) * height;
                 
-                fill(255, 255, 255, 100);
-                stroke(255, 230, 109, 150);
-                strokeWeight(2);
-                ellipse(x, y, size);
+                // Schwebende Gedankenbewegung
+                let floatX = thoughtX + sin(time * 0.7 + i) * 120;
+                let floatY = thoughtY + cos(time * 0.5 + i) * 80;
                 
-                // Smaller bubbles
-                for (let j = 0; j < 3; j++) {
-                    let bubbleX = x + cos(time * 2 + j) * size * 0.3;
-                    let bubbleY = y + sin(time * 2 + j) * size * 0.3;
-                    ellipse(bubbleX, bubbleY, size * 0.3);
+                push();
+                translate(floatX, floatY);
+                
+                // Gedankenblase mit Glow
+                let bubbleSize = 40 + sin(time * 2 + i) * 15;
+                
+                // Mehrschichtiger Glow
+                for (let glow = 3; glow > 0; glow--) {
+                    let glowAlpha = map(glow, 0, 3, 100, 0);
+                    fill(200 + i * 10, 150 + i * 15, 255, glowAlpha);
+                    ellipse(0, 0, bubbleSize + glow * 20);
                 }
+                
+                // Gedankenblase
+                fill(220, 180, 255, 150 + sin(time * 3 + i) * 105);
+                ellipse(0, 0, bubbleSize);
+                
+                // Gedanken-Symbol
+                rotate(sin(time * 0.8 + i) * 0.4);
+                textSize(25 + sin(time * 1.5 + i) * 8);
+                textAlign(CENTER, CENTER);
+                fill(255, 255, 255, 200 + sin(time * 4 + i) * 55);
+                text(thoughts[i], 0, 0);
+                
+                pop();
+            }
+            
+            // Bewusstseins-Spiralen
+            push();
+            translate(width * 0.8, height * 0.2);
+            
+            for (let spiral = 0; spiral < 100; spiral++) {
+                let angle = spiral * 0.2 + time * 2;
+                let radius = spiral * 1.5;
+                let x = cos(angle) * radius;
+                let y = sin(angle) * radius;
+                
+                let spiralAlpha = map(spiral, 0, 100, 200, 0);
+                fill(255, 200, 100, spiralAlpha);
+                ellipse(x, y, 6 - spiral * 0.04);
+            }
+            pop();
+            
+            // Gedankenstrom-Partikel
+            for (let stream = 0; stream < 50; stream++) {
+                let streamX = (stream * 20 + time * 100) % (width + 100) - 50;
+                let streamY = noise(stream * 0.1, time * 0.1) * height;
+                
+                let particleSize = 3 + sin(time * 5 + stream) * 2;
+                fill(255, 255, 200, 150 + sin(time * 3 + stream) * 100);
+                ellipse(streamX, streamY, particleSize);
+            }
+            
+            // Gedankenblasen
+            thoughtBubbles.forEach(bubble => {
+                bubble.update();
+                bubble.display();
+            });
+            
+            // Bewusstseins-Interaktion bei Mausklick
+            if (mouseIsPressed) {
+                push();
+                translate(mouseX, mouseY);
+                
+                // Gedanken-Explosion
+                for (let explosion = 0; explosion < 20; explosion++) {
+                    let expAngle = (explosion / 20) * TWO_PI + time * 3;
+                    let expRadius = 30 + sin(time * 8 + explosion) * 20;
+                    let expX = cos(expAngle) * expRadius;
+                    let expY = sin(expAngle) * expRadius;
+                    
+                    fill(255, 200, 100, 180 + sin(time * 6 + explosion) * 75);
+                    ellipse(expX, expY, 8 + sin(time * 10 + explosion) * 4);
+                }
+                
+                // Zentraler Bewusstseins-Punkt
+                fill(255, 255, 255, 200 + sin(time * 12) * 55);
+                ellipse(0, 0, 15 + sin(time * 8) * 8);
+                
+                pop();
             }
         }
 
@@ -2969,13 +3234,13 @@
                 
                 // Dream-specific interactions
                 switch(currentDream) {
-                    case 0: // Schäfchen - add more sheep
+                    case 0: // Sheep - add more sheep
                         sheep.push(new Sheep());
                         break;
-                    case 1: // Alptraum - create disturbance
+                    case 1: // Nightmare - create disturbance
                         nightmareElements.push(new NightmareElement());
                         break;
-                    case 2: // Schwerelosigkeit - gravity effect
+                    case 2: // Weightlessness - gravity effect
                         // Handled in draw function with mouseIsPressed
                         break;
                     case 3: // Gedanken - spawn thought bubble
